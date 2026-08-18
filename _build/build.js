@@ -4,9 +4,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const { site, classes, coaches, pricing, schedule, posts } = require('./data');
+const { site, legal, classes, coaches, pricing, schedule, posts } = require('./data');
 const T = require('./templates');
-const { icon, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks } = T;
+const { icon, mapLink, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks } = T;
 
 const OUT = path.join(__dirname, '..');
 const pages = [];
@@ -74,12 +74,18 @@ const home = `    <section class="hero">
       </div>
     </section>
 
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        <span>CrossFit</span><span>HYROX</span><span>Halterofilia</span><span>Gymnastic</span><span>Strongman</span><span>Open Box</span><span>Yoga + Core</span>
-        <span>CrossFit</span><span>HYROX</span><span>Halterofilia</span><span>Gymnastic</span><span>Strongman</span><span>Open Box</span><span>Yoga + Core</span>
-      </div>
-    </div>
+    ${(() => {
+      /* La cinta se desplaza exactamente el ancho de un grupo, así que el
+         bucle es continuo. Con cuatro grupos siempre queda material de sobra
+         a la derecha aunque la pantalla sea muy ancha: antes eran dos y en
+         monitores grandes se acababa la fila y se veía el hueco. */
+      const grupo = '<div class="marquee-group">' +
+        ['CrossFit', 'HYROX', 'Halterofilia', 'Gymnastic', 'Strongman', 'Open Box', 'Yoga + Core']
+          .map(t => `<span>${t}</span>`).join('') + '</div>';
+      return `<div class="marquee" aria-hidden="true">
+      <div class="marquee-track">${grupo.repeat(4)}</div>
+    </div>`;
+    })()}
 
     <section class="section">
       <div class="container">
@@ -427,7 +433,7 @@ const boxPage = `${pageHero({
           <iframe src="${site.mapEmbed}" title="Mapa de situación de VERSUS CrossFit Getafe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
         <div class="grid g-3 u-mt-3" data-stagger>
-          <div class="info-tile"><span class="ic">${icon.pin}</span><div><h3>Dirección</h3><p>VERSUS CrossFit Getafe<br>${site.address}<br>${site.city}</p></div></div>
+          <div class="info-tile"><span class="ic">${icon.pin}</span><div><h3>Dirección</h3><p>${mapLink('VERSUS CrossFit Getafe<br>' + site.address + '<br>' + site.city)}</p></div></div>
           <div class="info-tile"><span class="ic">${icon.phone}</span><div><h3>Teléfono</h3><p><a href="tel:${site.phoneRaw}">${site.phone}</a><br><a href="https://wa.me/${site.whatsappRaw}">WhatsApp ${site.whatsapp}</a></p></div></div>
           <div class="info-tile"><span class="ic">${icon.mail}</span><div><h3>Email</h3><p><a href="mailto:${site.email}">${site.email}</a></p></div></div>
         </div>
@@ -942,7 +948,7 @@ ${classes.map(c => `                  <option>${c.name}</option>`).join('\n')}
               </div>
               <div class="field"><label for="cg-msg">Mensaje</label><textarea id="cg-msg" name="mensaje" placeholder="Cuéntanos tu disponibilidad y si has entrenado antes"></textarea></div>
               <input type="hidden" name="asunto" value="Solicitud de clase de prueba gratis">
-              <label class="check"><input type="checkbox" required> He leído y acepto la <a href="politica-de-cookies.html">política de privacidad y cookies</a>.</label>
+              <label class="check"><input type="checkbox" required> He leído y acepto la <a href="politica-de-privacidad.html">política de privacidad</a>.</label>
               <button class="btn btn--lg" type="submit">Solicitar clase gratis</button>
               <p class="muted" style="font-size:.82rem" data-form-status hidden></p>
             </form>
@@ -991,7 +997,7 @@ const contacto = `${pageHero({
             <p class="kicker">Datos de contacto</p>
             <h2 class="display d-md u-mt-2">Versus<br>CrossFit Getafe</h2>
             <div class="grid u-mt-3" data-stagger>
-              <div class="info-tile"><span class="ic">${icon.pin}</span><div><h3>Dirección</h3><p>${site.address}<br>${site.city}<br><a href="${site.mapLink}" target="_blank" rel="noopener">Ver mapa de situación ↗</a></p></div></div>
+              <div class="info-tile"><span class="ic">${icon.pin}</span><div><h3>Dirección</h3><p>${mapLink(site.address + '<br>' + site.city)}<br><span class="muted">Pulsa para abrirlo en Google Maps ↗</span></p></div></div>
               <div class="info-tile"><span class="ic">${icon.phone}</span><div><h3>Teléfono</h3><p><a href="tel:${site.phoneRaw}">${site.phone}</a></p></div></div>
               <div class="info-tile"><span class="ic">${icon.wa}</span><div><h3>WhatsApp</h3><p><a href="https://wa.me/${site.whatsappRaw}" target="_blank" rel="noopener">${site.whatsapp}</a></p></div></div>
               <div class="info-tile"><span class="ic">${icon.mail}</span><div><h3>Email</h3><p><a href="mailto:${site.email}">${site.email}</a></p></div></div>
@@ -1008,7 +1014,7 @@ const contacto = `${pageHero({
               <div class="field"><label for="c-tel">Teléfono</label><input id="c-tel" name="telefono" type="tel" placeholder="600 000 000"></div>
               <div class="field"><label for="c-msg">Mensaje</label><textarea id="c-msg" name="mensaje" required placeholder="Cuéntanos en qué podemos ayudarte"></textarea></div>
               <input type="hidden" name="asunto" value="Consulta desde versuscrossfit.com">
-              <label class="check"><input type="checkbox" required> He leído y acepto la <a href="politica-de-cookies.html">política de privacidad y cookies</a>.</label>
+              <label class="check"><input type="checkbox" required> He leído y acepto la <a href="politica-de-privacidad.html">política de privacidad</a>.</label>
               <button class="btn btn--lg" type="submit">Enviar mensaje</button>
               <p class="muted" style="font-size:.82rem" data-form-status hidden></p>
             </form>
@@ -1037,7 +1043,142 @@ add('contacto.html', page({
 }));
 
 /* ==================================================================== *
- * 11 · Política de cookies
+ * 11 · Aviso legal
+ * ==================================================================== */
+const avisoLegal = `${pageHero({
+  img: 'assets/img/news-battle.jpg',
+  title: 'Aviso legal',
+  lead: 'Condiciones de uso de versuscrossfit.com y datos identificativos del titular.',
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'Aviso legal' }]
+})}
+
+    <section class="section">
+      <div class="container container--narrow prose" data-reveal>
+        <p class="muted">Última actualización: ${legal.actualizado}.</p>
+
+        <h3>1. Datos identificativos</h3>
+        <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de servicios de la sociedad de la información y de comercio electrónico (LSSI-CE), se facilitan los siguientes datos del titular de este sitio web:</p>
+        <ul class="ticks">
+          <li><strong>Titular:</strong> ${legal.titular}</li>
+          <li><strong>NIF:</strong> ${legal.nif}</li>
+          <li><strong>Domicilio:</strong> ${legal.domicilio}</li>
+          <li><strong>Teléfono:</strong> <a class="u-green" href="tel:${site.phoneRaw}">${site.phone}</a></li>
+          <li><strong>Correo electrónico:</strong> <a class="u-green" href="mailto:${site.email}">${site.email}</a></li>
+          <li><strong>Nombre comercial:</strong> ${site.name}</li>${legal.registro ? `
+          <li><strong>Datos registrales:</strong> ${legal.registro}</li>` : ''}
+        </ul>
+
+        <h3>2. Objeto</h3>
+        <p>Este sitio web tiene por objeto dar a conocer las instalaciones, las clases, los horarios y las tarifas del box, así como facilitar el contacto con quienes estén interesados en entrenar con nosotros. El acceso es gratuito y no requiere registro previo.</p>
+
+        <h3>3. Condiciones de uso</h3>
+        <p>El acceso a este sitio implica la aceptación de las presentes condiciones. La persona usuaria se compromete a hacer un uso adecuado de los contenidos y a no emplearlos para actividades contrarias a la ley, a la buena fe o al orden público, ni para dañar, inutilizar o sobrecargar el sitio o impedir su normal utilización.</p>
+        <p>Nos reservamos el derecho a modificar en cualquier momento la presentación, la configuración y los contenidos del sitio, así como a suspender temporalmente su acceso por motivos técnicos o de mantenimiento.</p>
+
+        <h3>4. Propiedad intelectual e industrial</h3>
+        <p>Los textos, fotografías, logotipos, marcas, diseños y el resto de elementos que componen este sitio son titularidad del responsable o de terceros que han autorizado su uso, y están protegidos por la normativa de propiedad intelectual e industrial. Queda prohibida su reproducción, distribución, comunicación pública o transformación sin autorización expresa y por escrito.</p>
+        <p>Las marcas <em>CrossFit</em> y <em>HYROX</em> pertenecen a sus respectivos titulares y se utilizan aquí únicamente para identificar la actividad del centro como box afiliado y gimnasio oficial.</p>
+
+        <h3>5. Responsabilidad</h3>
+        <p>Se procura que la información publicada sea correcta y esté actualizada, pero no se garantiza la ausencia de errores ni la vigencia permanente de horarios, tarifas y contenidos, que pueden variar. La información sobre precios y clases tiene carácter informativo y no constituye una oferta contractual vinculante.</p>
+        <p>La práctica de la actividad física conlleva riesgos. Los contenidos de esta web no sustituyen en ningún caso el consejo de un profesional sanitario; consulta con tu médico antes de empezar a entrenar si tienes cualquier duda sobre tu estado de salud.</p>
+
+        <h3>6. Enlaces a sitios de terceros</h3>
+        <p>Este sitio contiene enlaces a páginas de terceros, como la plataforma de reservas CrossHero, Google Maps y nuestros perfiles en redes sociales. No controlamos ni respondemos de sus contenidos ni de sus políticas de privacidad; su inclusión no implica que aprobemos, respaldemos o compartamos la información que ofrecen.</p>
+
+        <h3>7. Protección de datos</h3>
+        <p>El tratamiento de los datos personales que puedas facilitarnos se rige por nuestra <a class="u-green" href="politica-de-privacidad.html">política de privacidad</a>. El uso de cookies se detalla en la <a class="u-green" href="politica-de-cookies.html">política de cookies</a>.</p>
+
+        <h3>8. Legislación aplicable y jurisdicción</h3>
+        <p>Estas condiciones se rigen por la legislación española. Para la resolución de cualquier controversia, las partes se someten a los juzgados y tribunales del domicilio de la persona consumidora cuando así lo imponga la normativa de consumo aplicable.</p>
+      </div>
+    </section>`;
+
+add('aviso-legal.html', page({
+  file: 'aviso-legal.html',
+  title: 'Aviso legal · VERSUS CrossFit VSG',
+  description: 'Aviso legal de versuscrossfit.com: datos identificativos del titular, condiciones de uso, propiedad intelectual y legislación aplicable.',
+  og: 'news-battle.jpg',
+  body: avisoLegal
+}));
+
+/* ==================================================================== *
+ * 12 · Política de privacidad
+ * ==================================================================== */
+const privacidad = `${pageHero({
+  img: 'assets/img/news-liga2.jpg',
+  title: 'Política<br>de privacidad',
+  lead: 'Qué datos personales tratamos, para qué, durante cuánto tiempo y cómo puedes ejercer tus derechos.',
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'Política de privacidad' }]
+})}
+
+    <section class="section">
+      <div class="container container--narrow prose" data-reveal>
+        <p class="muted">Última actualización: ${legal.actualizado}.</p>
+        <p>Esta política explica cómo tratamos los datos personales de quienes visitan versuscrossfit.com o contactan con nosotros, conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).</p>
+
+        <h3>1. Responsable del tratamiento</h3>
+        <ul class="ticks">
+          <li><strong>Responsable:</strong> ${legal.titular}</li>
+          <li><strong>NIF:</strong> ${legal.nif}</li>
+          <li><strong>Domicilio:</strong> ${legal.domicilio}</li>
+          <li><strong>Contacto:</strong> <a class="u-green" href="mailto:${site.email}">${site.email}</a> · <a class="u-green" href="tel:${site.phoneRaw}">${site.phone}</a></li>
+        </ul>
+
+        <h3>2. Qué datos tratamos y cómo los recibimos</h3>
+        <p>Solo tratamos los datos que nos facilitas voluntariamente:</p>
+        <ul class="ticks">
+          <li><strong>Formulario de contacto y de clase de prueba:</strong> nombre, correo electrónico, teléfono (opcional) y el contenido de tu mensaje.</li>
+          <li><strong>Contacto directo:</strong> los datos que aparezcan cuando nos escribes por correo, WhatsApp o redes sociales, o cuando nos llamas.</li>
+          <li><strong>Navegación:</strong> datos técnicos agregados y la preferencia que guardas en el aviso de cookies. Se detallan en la <a class="u-green" href="politica-de-cookies.html">política de cookies</a>.</li>
+        </ul>
+        <p><strong>Importante:</strong> los formularios de esta web no envían tus datos a ningún servidor nuestro. Al pulsar «enviar» se abre tu propio gestor de correo con el mensaje preparado, de modo que el envío lo haces tú y los datos viajan por tu proveedor de correo hasta nuestro buzón.</p>
+
+        <h3>3. Para qué los usamos y con qué base legal</h3>
+        <ul class="ticks">
+          <li><strong>Atender tu consulta o reservar tu clase de prueba.</strong> Base: tu consentimiento (art. 6.1.a RGPD) y la aplicación de medidas precontractuales a petición tuya (art. 6.1.b).</li>
+          <li><strong>Gestionar tu alta y tu cuota si te haces socio.</strong> Base: la ejecución del contrato (art. 6.1.b) y el cumplimiento de obligaciones legales, contables y fiscales (art. 6.1.c).</li>
+          <li><strong>Enviarte información sobre horarios, eventos o novedades del box.</strong> Base: tu consentimiento, que puedes retirar cuando quieras.</li>
+        </ul>
+        <p>No tomamos decisiones automatizadas ni elaboramos perfiles con tus datos.</p>
+
+        <h3>4. Cuánto tiempo los conservamos</h3>
+        <p>Los datos de una consulta se conservan el tiempo necesario para atenderla y, después, durante el plazo en que puedan derivarse responsabilidades. Los datos de las personas socias se conservan mientras dure la relación y, una vez finalizada, bloqueados durante los plazos legales de prescripción (con carácter general, seis años en materia mercantil y cuatro en materia fiscal).</p>
+
+        <h3>5. A quién se comunican</h3>
+        <p>No vendemos ni cedemos tus datos a terceros. Solo acceden a ellos los proveedores que necesitamos para funcionar, siempre con el correspondiente contrato de encargo de tratamiento:</p>
+        <ul class="ticks">
+          <li><strong>CrossHero</strong>, plataforma de reservas y gestión de socios.</li>
+          <li><strong>Nuestro proveedor de correo electrónico y de alojamiento web.</strong></li>
+          <li><strong>Google Maps</strong>, cuyo mapa va incrustado en las páginas de contacto y del box y puede recoger datos de navegación conforme a sus propias políticas.</li>
+          <li>Las <strong>administraciones públicas</strong> cuando exista una obligación legal.</li>
+        </ul>
+
+        <h3>6. Tus derechos</h3>
+        <p>Puedes ejercer en cualquier momento los derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad, así como retirar el consentimiento que hubieras prestado. Para ello escríbenos a <a class="u-green" href="mailto:${site.email}">${site.email}</a> o a nuestro domicilio, indicando el derecho que quieres ejercer y adjuntando copia de un documento que acredite tu identidad.</p>
+        <p>Si consideras que no hemos atendido correctamente tu solicitud, puedes reclamar ante la Agencia Española de Protección de Datos, C/ Jorge Juan 6, 28001 Madrid (<a class="u-green" href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+
+        <h3>7. Seguridad</h3>
+        <p>Aplicamos las medidas técnicas y organizativas razonables para proteger tus datos frente a la pérdida, el uso indebido o el acceso no autorizado. El sitio se sirve mediante conexión cifrada.</p>
+
+        <h3>8. Menores de edad</h3>
+        <p>Para tratar los datos de menores de catorce años es necesario el consentimiento de quien ostente la patria potestad o la tutela. Si eres menor, no nos envíes tus datos sin esa autorización.</p>
+
+        <h3>9. Cambios en esta política</h3>
+        <p>Podemos actualizar esta política para adaptarla a novedades legislativas o a cambios en nuestra actividad. La versión vigente será siempre la publicada en esta página, con su fecha de última actualización.</p>
+      </div>
+    </section>`;
+
+add('politica-de-privacidad.html', page({
+  file: 'politica-de-privacidad.html',
+  title: 'Política de privacidad · VERSUS CrossFit VSG',
+  description: 'Política de privacidad de versuscrossfit.com: qué datos personales tratamos, con qué finalidad y base legal, cuánto los conservamos y cómo ejercer tus derechos.',
+  og: 'news-liga2.jpg',
+  body: privacidad
+}));
+
+/* ==================================================================== *
+ * 13 · Política de cookies
  * ==================================================================== */
 const cookies = `${pageHero({
   img: 'assets/img/news-rcp.jpg',
@@ -1083,6 +1224,13 @@ pages.forEach(p => {
   fs.writeFileSync(path.join(OUT, p.file), p.html, 'utf8');
 });
 
+/* Las páginas legales necesitan datos que solo tiene el box */
+const pendientes = Object.keys(legal).filter(k => /^\[/.test(String(legal[k])));
+if (pendientes.length) {
+  console.warn('\n⚠  Datos del titular sin rellenar en _build/data.js → legal.' + pendientes.join(', legal.'));
+  console.warn('   El aviso legal y la política de privacidad los muestran entre corchetes.');
+}
+
 const BASE = 'https://www.versuscrossfit.com/';
 const today = new Date().toISOString().slice(0, 10);
 
@@ -1099,6 +1247,8 @@ const seoMeta = {
   'entrenadores.html':     { group: 'Equipo',                    freq: 'monthly', prio: '0.8' },
   'contacto.html':         { group: 'Contacto',                  freq: 'yearly',  prio: '0.7' },
   'blog.html':             { group: 'Blog',                      freq: 'weekly',  prio: '0.8' },
+  'aviso-legal.html':      { group: 'Legal',                     freq: 'yearly',  prio: '0.3' },
+  'politica-de-privacidad.html': { group: 'Legal',              freq: 'yearly',  prio: '0.3' },
   'politica-de-cookies.html': { group: 'Legal',                  freq: 'yearly',  prio: '0.2' }
 };
 function metaFor(file) {

@@ -133,6 +133,11 @@ function responsiveImg(src, alt, opts){
   return `<img${cls} src="${small}" srcset="${small} ${w1}w, ${src} ${w2}w" sizes="${opts.sizes||'(max-width:660px) 92vw, (max-width:1000px) 46vw, 30vw'}" alt="${alt}" width="${opts.w||800}" height="${opts.h||600}"${load}${style}>`;
 }
 
+/* La dirección enlaza siempre a Google Maps, desde donde sea que aparezca */
+function mapLink(texto, cls) {
+  return `<a class="map-link${cls ? ' ' + cls : ''}" href="${site.mapLink}" target="_blank" rel="noopener" aria-label="Ver la dirección en Google Maps">${texto}</a>`;
+}
+
 function cropClass(c){ return c === 'top' ? ' crop-top' : c === 'bottom' ? ' crop-bottom' : ''; }
 function brandTile(){ return '<span class="tile-brand"><img src="assets/img/logo-mark.png" alt="" width="96" height="99" loading="lazy"></span>'; }
 
@@ -202,7 +207,7 @@ function header(current) {
 
   <div class="topbar">
     <div class="container">
-      <p><span class="dot"></span>${site.address} — ${site.city}</p>
+      <p><span class="dot"></span>${mapLink(site.address + ' — ' + site.city)}</p>
       <ul>
         <li><a href="tel:${site.phoneRaw}">${site.phone}</a></li>
         <li><a href="https://wa.me/${site.whatsappRaw}" target="_blank" rel="noopener">WhatsApp ${site.whatsapp}</a></li>
@@ -311,9 +316,7 @@ function footer() {
         <div class="footer-col">
           <h4>Contacto</h4>
           <address>
-            VERSUS CrossFit Getafe<br>
-            ${site.address}<br>
-            ${site.city}<br><br>
+            ${mapLink('VERSUS CrossFit Getafe<br>' + site.address + '<br>' + site.city)}<br><br>
             <a href="tel:${site.phoneRaw}">${site.phone}</a><br>
             <a href="https://wa.me/${site.whatsappRaw}">WhatsApp ${site.whatsapp}</a><br>
             <a href="mailto:${site.email}">${site.email}</a>
@@ -328,6 +331,8 @@ function footer() {
       <div class="footer-bottom">
         <p>© <span data-year>2026</span> CrossFit VSG — Todos los derechos reservados.</p>
         <ul>
+          <li><a href="aviso-legal.html">Aviso legal</a></li>
+          <li><a href="politica-de-privacidad.html">Política de privacidad</a></li>
           <li><a href="politica-de-cookies.html">Política de cookies</a></li>
           <li><a href="contacto.html">Contacto</a></li>
           <li><a href="${site.booking}" target="_blank" rel="noopener">Acceso socios</a></li>
@@ -342,7 +347,7 @@ function footer() {
   </div>
 
   <div class="cookie" role="region" aria-label="Aviso de cookies">
-    <p>Usamos cookies propias y de terceros para mejorar tu experiencia de navegación. Puedes consultar más información en nuestra <a href="politica-de-cookies.html">política de cookies</a>.</p>
+    <p>Usamos cookies propias y de terceros para mejorar tu experiencia de navegación. Puedes consultar más información en nuestra <a href="politica-de-cookies.html">política de cookies</a> y en la <a href="politica-de-privacidad.html">política de privacidad</a>.</p>
     <div class="btn-row">
       <button class="btn btn--sm" type="button" data-cookie="accept">Aceptar</button>
       <button class="btn btn--ghost btn--sm" type="button" data-cookie="reject">Solo esenciales</button>
@@ -511,4 +516,4 @@ function renderBlocks(blocks) {
   }).join('\n        ');
 }
 
-module.exports = { icon, nav, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks };
+module.exports = { icon, nav, mapLink, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks };

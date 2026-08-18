@@ -521,6 +521,7 @@ body.nav-open .drawer{
   mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
 }
 .marquee-track{display:flex;width:max-content;animation:marquee 42s linear infinite}
+.marquee-group{display:flex;flex:none}
 .marquee:hover .marquee-track{animation-play-state:paused}
 .marquee-track span{
   display:inline-flex;align-items:center;gap:2.5rem;padding-right:2.5rem;
@@ -528,8 +529,11 @@ body.nav-open .drawer{
   color:var(--text-3);white-space:nowrap;
 }
 .marquee-track span::after{content:"";width:8px;height:8px;background:var(--green);transform:rotate(45deg);flex:none}
-.marquee-track span:nth-child(even){color:var(--text)}
-@keyframes marquee{to{transform:translateX(-50%)}}
+/* La alternancia va por grupo: si fuera global, cada copia saldría con los
+   colores invertidos y el salto del bucle se notaría. */
+.marquee-group span:nth-child(even){color:var(--text)}
+/* Un grupo = 25% de la cinta (hay cuatro), así el reinicio es invisible. */
+@keyframes marquee{to{transform:translateX(-25%)}}
 
 /* Cards */
 .card{
@@ -896,3 +900,15 @@ body.nav-open .mobile-bar{transform:translateY(115%)}
   .bg-logo{width:108vw;opacity:.1;filter:blur(1.5px)}
 }
 @media print{.bg-logo{display:none}}
+
+/* ---------- Dirección enlazada a Google Maps ---------- */
+.map-link{
+  color:inherit;text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:color .22s var(--ease),border-color .22s var(--ease);
+}
+.map-link:hover,.map-link:focus-visible{color:var(--green);border-bottom-color:rgba(0,199,0,.45)}
+/* El pie desplaza sus enlaces al pasar por encima; en un bloque de varias
+   líneas como la dirección eso queda mal. */
+.footer-col .map-link{display:inline}
+.footer-col .map-link:hover{transform:none}
