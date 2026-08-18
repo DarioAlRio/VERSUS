@@ -14,6 +14,7 @@ hosting, GitHub Pages, Netlify o Vercel subiendo la carpeta tal cual.
 ```
 .
 ├── index.html                 Portada
+├── el-box.html                Resumen de la sección El Box
 ├── que-es-crossfit.html       Qué es CrossFit
 ├── box.html                   Nuestro box (instalaciones, equipamiento, mapa)
 ├── horarios.html              Horarios y reservas
@@ -60,17 +61,22 @@ node server.js
 El menú original tenía ~20 entradas planas. Aquí se reduce a **6 entradas de primer nivel**
 con desplegables agrupados:
 
-| Entrada | Contenido |
-|---|---|
-| Inicio | — |
-| El Box ▾ | *Conócenos*: qué es CrossFit · nuestro box · el equipo — *Práctico*: horarios · tarifas · contacto |
-| Entrenamientos ▾ | *Programas base*: CrossFit · Halterofilia · Gymnastic — *Especialidades*: HYROX · Hybrid Strongman · Yoga + Core · Open Box |
-| Equipo ▾ | Los 7 entrenadores |
-| Tarifas | — |
-| Blog | — |
+| Entrada | Enlaza a | Desplegable |
+|---|---|---|
+| Inicio | `index.html` | — |
+| El Box ▾ | `el-box.html` | *Conócenos*: qué es CrossFit · nuestro box · el equipo — *Práctico*: horarios · tarifas · contacto |
+| Entrenamientos ▾ | `clases.html` | *Programas base*: CrossFit · Halterofilia · Gymnastic — *Especialidades*: HYROX · Hybrid Strongman · Yoga + Core · Open Box |
+| Equipo ▾ | `entrenadores.html` | Los 7 entrenadores |
+| Tarifas | `tarifas.html` | — |
+| Blog | `blog.html` | — |
 
-En escritorio son paneles mega con descripciones, miniaturas y una tarjeta promocional.
-En móvil, un panel a pantalla completa con los mismos grupos en acordeones.
+Las tres entradas con desplegable **también son enlaces**: al pincharlas se llega a una
+página resumen con todas sus opciones. Con ratón el panel se abre al pasar por encima y
+el clic navega; sin *hover* (táctil) el primer toque despliega y el segundo entra.
+
+En escritorio los desplegables son paneles mega con descripciones, miniaturas y una
+tarjeta promocional. En móvil, un cajón a pantalla completa donde cada grupo es una fila
+con dos zonas: el nombre lleva a la página resumen y el chevron despliega los enlaces.
 
 ## Notas técnicas
 

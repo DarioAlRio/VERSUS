@@ -37,7 +37,7 @@ const nav = [
   { label: 'Inicio', href: 'index.html' },
   {
     label: 'El Box',
-    href: 'box.html',
+    href: 'el-box.html',
     panel: {
       cols: 2,
       groups: [
@@ -176,16 +176,20 @@ function header(current) {
         </li>`;
   }).join('\n');
 
+  /* El rótulo del grupo enlaza a su página resumen y el chevron solo
+     despliega: mismo gesto que en escritorio. */
   const accordions = nav.filter(i => i.panel).map(item => `
           <div class="acc">
-            <button class="acc-btn" type="button">${item.label}${icon.chev}</button>
+            <div class="acc-row">
+              <a class="acc-btn" href="${item.href}">${item.label}</a>
+              <button class="acc-toggle" type="button" aria-expanded="false" aria-label="Desplegar ${item.label}">${icon.chev}</button>
+            </div>
             <div class="acc-panel">
               <div class="acc-panel-inner">
                 ${item.panel.groups.map(g => `<div>
                   ${g.title.trim() ? `<p class="acc-group-title">${g.title}</p>` : ''}
                   <ul class="acc-links">${g.links.map(l => `<li><a href="${l.href}">${l.label}</a></li>`).join('')}</ul>
                 </div>`).join('\n                ')}
-                <div><ul class="acc-links"><li><a href="${item.href}">Ver todo · ${item.label}</a></li></ul></div>
               </div>
             </div>
           </div>`).join('');
@@ -224,14 +228,16 @@ ${items}
           <a class="btn btn--sm" href="clase-gratis.html">Clase gratis</a>
         </div>
 
-        <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer">
-          <span></span><span></span><span></span>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="drawer">
+          <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="burger-txt">Menú</span>
         </button>
       </div>
     </div>
 
     <div class="drawer" id="drawer" aria-hidden="true">
       <div class="drawer-inner">
+        <p class="drawer-title">Menú</p>
         <div>
           <div class="acc"><a class="acc-btn" href="index.html">Inicio</a></div>${accordions}
           <div class="acc"><a class="acc-btn" href="tarifas.html">Tarifas</a></div>
@@ -244,16 +250,16 @@ ${items}
           <a class="btn btn--ghost" href="${site.booking}" target="_blank" rel="noopener">Acceso socios · CrossHero</a>
         </div>
 
-        <div class="drawer-meta">
-          <p>${site.address}<br>${site.city}</p>
-          <p><a href="tel:${site.phoneRaw}">${site.phone}</a> · <a href="https://wa.me/${site.whatsappRaw}">${site.whatsapp}</a></p>
-          <p><a href="mailto:${site.email}">${site.email}</a></p>
-        </div>
-
-        <div class="drawer-social social">
+        <div class="drawer-foot">
+          <div class="drawer-meta">
+            <p><a href="tel:${site.phoneRaw}">${site.phone}</a></p>
+            <p><a href="mailto:${site.email}">${site.email}</a></p>
+          </div>
+          <div class="drawer-social social">
           <a href="${site.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${icon.ig}</a>
           <a href="${site.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${icon.fb}</a>
-          <a href="https://wa.me/${site.whatsappRaw}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon.wa}</a>
+            <a href="https://wa.me/${site.whatsappRaw}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon.wa}</a>
+          </div>
         </div>
       </div>
     </div>
@@ -447,6 +453,24 @@ function classCard(c) {
         </article>`;
 }
 
+/* Tarjeta de una opción dentro de una página resumen de sección */
+function hubCard(o) {
+  return `        <article class="card">
+          <span class="card-accent"></span>
+          <div class="card-media">
+            ${responsiveImg('assets/img/' + o.img, o.alt || o.title, { w: 580, h: 360 })}
+          </div>
+          <div class="card-body">
+            <h3>${o.title}</h3>
+            <p>${o.text}</p>
+            <div class="card-foot">
+              <span class="tag">${o.tag}</span>
+              <a class="link-arrow card-link" href="${o.href}">${o.cta || 'Ver'} ${icon.arrow}</a>
+            </div>
+          </div>
+        </article>`;
+}
+
 function coachCard(c) {
   const media = c.img
     ? responsiveImg(c.img, `${c.name}, entrenador de VERSUS CrossFit`, { w: 600, h: 800, sizes: '(max-width:660px) 92vw, (max-width:1000px) 46vw, 23vw' })
@@ -482,4 +506,4 @@ function renderBlocks(blocks) {
   }).join('\n        ');
 }
 
-module.exports = { icon, nav, page, pageHero, ctaBand, classCard, coachCard, postCard, renderBlocks };
+module.exports = { icon, nav, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks };
