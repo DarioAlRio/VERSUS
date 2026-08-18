@@ -27,6 +27,8 @@ hosting, GitHub Pages, Netlify o Vercel subiendo la carpeta tal cual.
 ├── post-*.html                10 entradas
 ├── clase-gratis.html          Clase de prueba gratuita (formulario)
 ├── contacto.html              Contacto + mapa
+├── aviso-legal.html           Aviso legal (LSSI-CE)
+├── politica-de-privacidad.html Política de privacidad (RGPD)
 ├── politica-de-cookies.html
 ├── sitemap.xml · robots.txt
 ├── assets/
@@ -95,6 +97,13 @@ con dos zonas: el nombre lleva a la página resumen y el chevron despliega los e
   planas (`--alt`, `--surface`, marquesina y pie) se declaran translúcidas con el mismo
   color compuesto para dejarla pasar. Se quita con `BG_LOGO = false` en
   `_build/templates.js` + `node _build/build.js`.
+- **Páginas legales**: aviso legal (LSSI-CE art. 10) y política de privacidad (RGPD /
+  LOPDGDD), enlazadas desde el pie, el aviso de cookies y el consentimiento de los
+  formularios. ⚠ Los datos del titular (razón social y NIF) están como marcador en
+  `legal` dentro de `_build/data.js`: hay que rellenarlos antes de publicar. El build
+  avisa mientras sigan sin rellenar.
+- La dirección postal enlaza a Google Maps allí donde aparece (barra superior, pie,
+  ficha del box y contacto).
 - Los formularios abren el gestor de correo del usuario (`mailto:`). Para recibirlos por
   web hay que conectar un servicio de formularios (Formspree, Netlify Forms, etc.).
 

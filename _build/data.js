@@ -22,6 +22,22 @@ const site = {
 };
 
 /* ------------------------------------------------------------------ *
+ * Datos del titular para el aviso legal y la política de privacidad.
+ *
+ * PENDIENTE: los campos entre corchetes no están publicados en el
+ * dominio, así que hay que sustituirlos por los datos reales antes de
+ * poner la web en producción. La LSSI-CE (art. 10) exige el nombre o
+ * razón social, el NIF y el domicilio del titular.
+ * ------------------------------------------------------------------ */
+const legal = {
+  titular: '[RAZÓN SOCIAL DEL TITULAR]',
+  nif: '[NIF / CIF]',
+  domicilio: 'C/ Sindicalismo 3 y 5, Pol. Ind. Los Olivos, 28906 Getafe (Madrid)',
+  registro: '',                       /* opcional: Registro Mercantil, tomo, folio, hoja */
+  actualizado: '18 de agosto de 2026'
+};
+
+/* ------------------------------------------------------------------ *
  * Clases
  * ------------------------------------------------------------------ */
 const classes = [
@@ -455,4 +471,4 @@ const posts = [
   }
 ];
 
-module.exports = { site, classes, coaches, pricing, schedule, posts };
+module.exports = { site, legal, classes, coaches, pricing, schedule, posts };
