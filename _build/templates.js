@@ -1,6 +1,15 @@
 /* Shell, cabecera, pie y componentes reutilizables */
 const { site, classes, coaches } = require('./data');
 
+/* Raíles de neón laterales. Ponlo a false y reconstruye para quitarlos:
+   no hay ninguna otra dependencia en las plantillas ni en el JS. */
+const NEON_RAILS = true;
+const rails = () => NEON_RAILS
+  ? `
+  <div class="rails" aria-hidden="true"><span class="rail rail--l"></span><span class="rail rail--r"></span></div>
+`
+  : '';
+
 /* ---------------- Iconos SVG (inline, sin dependencias) ---------------- */
 const icon = {
   chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
@@ -373,7 +382,7 @@ function page(opts) {
   <link rel="preload" href="assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">${jsonld}
 </head>
-<body>
+<body>${rails()}
 ${header(opts.file)}
 
   <main id="main">
