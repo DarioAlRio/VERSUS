@@ -696,9 +696,20 @@ const tarifas = `${pageHero({
 
         <div data-tabs data-reveal>
           <div class="price-tabs" role="tablist" aria-label="Tipo de tarifa">
-${pricing.groups.map((g, i) => `            <button class="price-tab" type="button" role="tab" id="tab-${g.id}" aria-controls="panel-${g.id}" aria-selected="${i === 0}">${g.label}</button>`).join('\n')}
+            <button class="price-tab" type="button" role="tab" id="tab-todas" aria-controls="panel-todas" aria-selected="true">Todas</button>
+${pricing.groups.map(g => `            <button class="price-tab" type="button" role="tab" id="tab-${g.id}" aria-controls="panel-${g.id}" aria-selected="false">${g.label}</button>`).join('\n')}
           </div>
-${pricing.groups.map((g, i) => `          <div id="panel-${g.id}" role="tabpanel" aria-labelledby="tab-${g.id}"${i === 0 ? '' : ' hidden'}>
+
+          <div id="panel-todas" role="tabpanel" aria-labelledby="tab-todas">
+${pricing.groups.map((g, i) => `            <div class="price-block${i ? ' u-mt-3' : ''}">
+              <p class="kicker kicker--muted">${g.label}</p>
+              <div class="grid g-4 u-mt-2">
+${g.plans.map(planCard).join('\n')}
+              </div>
+            </div>`).join('\n')}
+          </div>
+
+${pricing.groups.map(g => `          <div id="panel-${g.id}" role="tabpanel" aria-labelledby="tab-${g.id}" hidden>
             <div class="grid g-4">
 ${g.plans.map(planCard).join('\n')}
             </div>
