@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { site, classes, coaches, pricing, schedule, posts } = require('./data');
 const T = require('./templates');
-const { icon, page, pageHero, ctaBand, classCard, coachCard, postCard, renderBlocks } = T;
+const { icon, page, pageHero, ctaBand, classCard, coachCard, hubCard, postCard, renderBlocks } = T;
 
 const OUT = path.join(__dirname, '..');
 const pages = [];
@@ -227,7 +227,7 @@ const queEs = `${pageHero({
   img: 'assets/img/news-7anos.jpg',
   title: '¿Qué es<br>CrossFit?',
   lead: 'Un sistema de entrenamiento de fuerza y acondicionamiento basado en ejercicios funcionales constantemente variados realizados a alta intensidad.',
-  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'box.html' }, { label: '¿Qué es CrossFit?' }]
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'el-box.html' }, { label: '¿Qué es CrossFit?' }]
 })}
 
     <section class="section">
@@ -300,14 +300,69 @@ add('que-es-crossfit.html', page({
 }));
 
 /* ==================================================================== *
- * 3 · Nuestro box
+ * 3 · El Box (página resumen de la sección)
+ * ==================================================================== */
+const elBoxOpciones = [
+  { href: 'que-es-crossfit.html', img: 'news-7anos.jpg',        tag: 'El método',   cta: 'Leer',      title: '¿Qué es CrossFit?', text: 'Qué entrenas exactamente, a quién va dirigido y por qué funciona incluso si no has pisado un box nunca.' },
+  { href: 'box.html',             img: 'news-battle.jpg',       tag: '1000 m²',     cta: 'Ver el box', title: 'Nuestras instalaciones', text: 'Tarimas de halterofilia, zona Open Box, community zone, fisioterapia y parking propio en Los Olivos.' },
+  { href: 'entrenadores.html',    img: 'coach-mateo.jpg',       tag: '7 coaches',   cta: 'Ver equipo', title: 'El equipo', text: 'Certificaciones CrossFit Level 1 y 2, halterofilia nacional, gimnasia, kettlebell y strongman.' },
+  { href: 'horarios.html',        img: 'news-open2025.jpg',     tag: 'Lun a Sáb',   cta: 'Ver horarios', title: 'Horarios y reservas', text: 'Turnos de lunes a sábado y reserva de plaza desde la app CrossHero.' },
+  { href: 'tarifas.html',         img: 'news-halterofilia3.jpg', tag: 'Sin permanencia', cta: 'Ver tarifas', title: 'Tarifas', text: 'Bonos mensuales, trimestrales y sesiones sueltas. Todas con Open Box gratuito los sábados.' },
+  { href: 'contacto.html',        img: 'news-liga2.jpg',        tag: 'Getafe',      cta: 'Cómo llegar', title: 'Contacto y cómo llegar', text: 'Dónde estamos, cómo venir en coche o transporte público y cómo escribirnos.' }
+];
+
+const elBox = `${pageHero({
+  img: 'assets/img/news-battle.jpg',
+  title: 'El Box',
+  lead: 'Todo lo que necesitas saber sobre VERSUS antes de venir: el método, las instalaciones, el equipo, los horarios y las tarifas.',
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box' }]
+})}
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Conócenos</p>
+          <h2 class="display d-md u-mt-2">Elige por<br>dónde empezar</h2>
+        </div>
+        <div class="grid g-3" data-stagger>
+${elBoxOpciones.map(hubCard).join('\n')}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt section--edge">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Atajos</p>
+          <h2 class="display d-sm u-mt-2">Lo que más se busca</h2>
+        </div>
+        <div class="grid g-3" data-stagger>
+          <a class="info-tile" href="clases.html"><span class="info-ic">${icon.dumbbell}</span><div><h3>Entrenamientos</h3><p>Las siete disciplinas del box.</p></div></a>
+          <a class="info-tile" href="clase-gratis.html"><span class="info-ic">${icon.spark}</span><div><h3>Clase de prueba</h3><p>Gratis y sin compromiso.</p></div></a>
+          <a class="info-tile" href="blog.html"><span class="info-ic">${icon.cal}</span><div><h3>Blog</h3><p>Competiciones, ligas y eventos.</p></div></a>
+        </div>
+      </div>
+    </section>
+
+${ctaBand()}`;
+
+add('el-box.html', page({
+  file: 'el-box.html',
+  title: 'El Box · VERSUS CrossFit VSG Getafe',
+  description: 'Todo sobre VERSUS CrossFit Getafe: qué es CrossFit, nuestras instalaciones de 1000 m², el equipo de entrenadores, horarios, tarifas y cómo llegar.',
+  og: 'news-battle.jpg',
+  body: elBox
+}));
+
+/* ==================================================================== *
+ * 4 · Nuestro box
  * ==================================================================== */
 const boxPage = `${pageHero({
   img: 'assets/img/news-battle.jpg',
   title: 'Nuestro box<br>en Getafe',
   lead: 'Más de 1000 m² en el Polígono Industrial Los Olivos, con parking propio y todo el material que necesitas.',
   tags: [{ label: '1000 m²', green: true }, 'Parking propio', 'Fisioterapia', 'Community zone'],
-  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'box.html' }, { label: 'Nuestro box' }]
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'el-box.html' }, { label: 'Nuestro box' }]
 })}
 
     <section class="section">
@@ -396,7 +451,7 @@ const horarios = `${pageHero({
   img: 'assets/img/news-open2025.jpg',
   title: 'Horarios<br>y reservas',
   lead: 'Abrimos de 7:00 a 22:00. Reserva tu plaza desde la app CrossHero, disponible para iOS y Android.',
-  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'box.html' }, { label: 'Horarios y reservas' }]
+  crumbs: [{ label: 'Inicio', href: 'index.html' }, { label: 'El Box', href: 'el-box.html' }, { label: 'Horarios y reservas' }]
 })}
 
     <section class="section">
@@ -1037,6 +1092,7 @@ const seoMeta = {
   'clases.html':           { group: 'Entrenamientos',            freq: 'monthly', prio: '0.9' },
   'tarifas.html':          { group: 'Tarifas',                   freq: 'monthly', prio: '0.9' },
   'clase-gratis.html':     { group: 'Conversión',                freq: 'monthly', prio: '0.9' },
+  'el-box.html':           { group: 'El Box',                    freq: 'monthly', prio: '0.9' },
   'horarios.html':         { group: 'El Box',                    freq: 'weekly',  prio: '0.8' },
   'box.html':              { group: 'El Box',                    freq: 'monthly', prio: '0.8' },
   'que-es-crossfit.html':  { group: 'El Box',                    freq: 'yearly',  prio: '0.7' },

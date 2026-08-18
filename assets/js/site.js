@@ -90,9 +90,14 @@
     });
 
     trigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (item.classList.contains('is-open')) closeItem(item);
-      else openItem(item);
+      /* Con ratón el panel ya se abre al pasar por encima, así que el clic
+         deja pasar la navegación a la página resumen del grupo. */
+      if (window.matchMedia('(hover: hover)').matches) return;
+      /* Sin hover: el primer toque despliega, el segundo entra. */
+      if (!item.classList.contains('is-open')) {
+        e.preventDefault();
+        openItem(item);
+      }
     });
 
     item.addEventListener('focusin', function () { openItem(item); });
@@ -130,6 +135,7 @@
       body.style.width = '100%';
       if (burger) burger.setAttribute('aria-expanded', 'true');
       if (drawer) drawer.removeAttribute('aria-hidden');
+      labelBurger(true);
     } else {
       body.classList.remove('nav-open');
       body.style.position = '';
@@ -138,9 +144,16 @@
       window.scrollTo(0, scrollLock);
       if (burger) burger.setAttribute('aria-expanded', 'false');
       if (drawer) drawer.setAttribute('aria-hidden', 'true');
+      labelBurger(false);
     }
   }
 
+  var burgerTxt = $('.burger-txt');
+  function labelBurger(open) {
+    if (burgerTxt) burgerTxt.textContent = open ? 'Cerrar' : 'Menú';
+    if (burger) burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  }
+  labelBurger(false);
   if (burger) burger.addEventListener('click', function () { toggleDrawer(); });
   if (drawer) {
     $$('a', drawer).forEach(function (a) {
@@ -155,7 +168,7 @@
    * Accordions (drawer + FAQ)
    * ------------------------------------------------------------------ */
   $$('.acc').forEach(function (acc) {
-    var btn = $('.acc-btn', acc);
+    var btn = $('.acc-toggle', acc) || $('.acc-btn', acc);
     var panel = $('.acc-panel', acc);
     if (!btn || !panel) return;
 
@@ -169,7 +182,8 @@
           if (other !== acc && other.classList.contains('is-open')) {
             other.classList.remove('is-open');
             $('.acc-panel', other).style.height = '0px';
-            $('.acc-btn', other).setAttribute('aria-expanded', 'false');
+            var ob = $('.acc-toggle', other) || $('.acc-btn', other);
+            if (ob) ob.setAttribute('aria-expanded', 'false');
           }
         });
       }
