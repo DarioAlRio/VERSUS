@@ -89,6 +89,12 @@ con dos zonas: el nombre lleva a la página resumen y el chevron despliega los e
   navegación por teclado en el menú y las pestañas, y respeto a `prefers-reduced-motion`.
 - **SEO**: metadatos y Open Graph por página, JSON-LD `SportsActivityLocation`,
   `sitemap.xml` con `lastmod`/`changefreq`/`priority` y `robots.txt`.
+- **Marca de agua**: el logo «CrossFit · VSG» grande, difuminado y fijo en el centro de
+  la pantalla, con `z-index:-1` para quedar por detrás de cualquier elemento. Solo asoma
+  donde el fondo es negro: las secciones con foto a sangre lo tapan solas. Las bandas
+  planas (`--alt`, `--surface`, marquesina y pie) se declaran translúcidas con el mismo
+  color compuesto para dejarla pasar. Se quita con `BG_LOGO = false` en
+  `_build/templates.js` + `node _build/build.js`.
 - Los formularios abren el gestor de correo del usuario (`mailto:`). Para recibirlos por
   web hay que conectar un servicio de formularios (Formspree, Netlify Forms, etc.).
 

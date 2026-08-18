@@ -1,6 +1,10 @@
 /* Shell, cabecera, pie y componentes reutilizables */
 const { site, classes, coaches } = require('./data');
 
+/* Marca de agua del logo al fondo de la página. Ponlo a false y reconstruye
+   para quitarla: no hay ninguna otra dependencia. */
+const BG_LOGO = true;
+
 /* ---------------- Iconos SVG (inline, sin dependencias) ---------------- */
 const icon = {
   chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
@@ -380,6 +384,7 @@ function page(opts) {
   <link rel="stylesheet" href="assets/css/site.css">${jsonld}
 </head>
 <body>
+${BG_LOGO ? '  <div class="bg-logo" aria-hidden="true"><img src="assets/img/logo.png" alt="" width="206" height="75"></div>' : ''}
 ${header(opts.file)}
 
   <main id="main">
