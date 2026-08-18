@@ -83,9 +83,6 @@ En móvil, un panel a pantalla completa con los mismos grupos en acordeones.
   navegación por teclado en el menú y las pestañas, y respeto a `prefers-reduced-motion`.
 - **SEO**: metadatos y Open Graph por página, JSON-LD `SportsActivityLocation`,
   `sitemap.xml` con `lastmod`/`changefreq`/`priority` y `robots.txt`.
-- **Raíles de neón laterales**: dos barras verdes fijas al viewport, por detrás del
-  contenido. Reversible sin tocar nada más: `NEON_RAILS = false` en `_build/templates.js`
-  + `node _build/build.js`, o al vuelo con `<html data-rails="off">`.
 - Los formularios abren el gestor de correo del usuario (`mailto:`). Para recibirlos por
   web hay que conectar un servicio de formularios (Formspree, Netlify Forms, etc.).
 
