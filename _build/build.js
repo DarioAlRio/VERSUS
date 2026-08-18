@@ -683,6 +683,13 @@ function planCard(p) {
           </div>`;
 }
 
+/* En la pestaña «Todas» las tarifas sin cuota van primero:
+   la clase de prueba gratuita es la puerta de entrada. */
+const gruposTodas = [
+  ...pricing.groups.filter(g => g.id === 'suelto'),
+  ...pricing.groups.filter(g => g.id !== 'suelto')
+];
+
 const tarifas = `${pageHero({
   img: 'assets/img/news-halterofilia3.jpg',
   title: 'Tarifas',
@@ -701,7 +708,7 @@ ${pricing.groups.map(g => `            <button class="price-tab" type="button" r
           </div>
 
           <div id="panel-todas" role="tabpanel" aria-labelledby="tab-todas">
-${pricing.groups.map((g, i) => `            <div class="price-block${i ? ' u-mt-3' : ''}">
+${gruposTodas.map((g, i) => `            <div class="price-block${g.plans.length === 2 ? ' price-block--wide' : ''}${i ? ' u-mt-3' : ''}">
               <p class="kicker kicker--muted">${g.label}</p>
               <div class="grid g-4 u-mt-2">
 ${g.plans.map(planCard).join('\n')}
@@ -709,7 +716,7 @@ ${g.plans.map(planCard).join('\n')}
             </div>`).join('\n')}
           </div>
 
-${pricing.groups.map(g => `          <div id="panel-${g.id}" role="tabpanel" aria-labelledby="tab-${g.id}" hidden>
+${pricing.groups.map(g => `          <div id="panel-${g.id}" class="${g.plans.length === 2 ? 'price-block--wide' : ''}" role="tabpanel" aria-labelledby="tab-${g.id}" hidden>
             <div class="grid g-4">
 ${g.plans.map(planCard).join('\n')}
             </div>
