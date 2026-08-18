@@ -227,11 +227,101 @@
 
         <div data-tabs data-reveal>
           <div class="price-tabs" role="tablist" aria-label="Tipo de tarifa">
-            <button class="price-tab" type="button" role="tab" id="tab-mensual" aria-controls="panel-mensual" aria-selected="true">Mensual</button>
+            <button class="price-tab" type="button" role="tab" id="tab-todas" aria-controls="panel-todas" aria-selected="true">Todas</button>
+            <button class="price-tab" type="button" role="tab" id="tab-mensual" aria-controls="panel-mensual" aria-selected="false">Mensual</button>
             <button class="price-tab" type="button" role="tab" id="tab-trimestral" aria-controls="panel-trimestral" aria-selected="false">Trimestral</button>
             <button class="price-tab" type="button" role="tab" id="tab-suelto" aria-controls="panel-suelto" aria-selected="false">Sin cuota</button>
           </div>
-          <div id="panel-mensual" role="tabpanel" aria-labelledby="tab-mensual">
+
+          <div id="panel-todas" role="tabpanel" aria-labelledby="tab-todas">
+            <div class="price-block">
+              <p class="kicker kicker--muted">Mensual</p>
+              <div class="grid g-4 u-mt-2">
+          <div class="plan">
+            <h3>Box 10</h3>
+            <p class="amount"><span class="cur">€</span>69,90</p>
+            <p class="per">/ mes</p>
+            <p class="desc">10 clases a distribuir como prefieras dentro de 1 mes.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan">
+            <h3>Box 15</h3>
+            <p class="amount"><span class="cur">€</span>79,90</p>
+            <p class="per">/ mes</p>
+            <p class="desc">15 clases a distribuir como prefieras dentro de 1 mes.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan plan--featured">
+            <h3>Box ilimitado</h3>
+            <p class="amount"><span class="cur">€</span>89,90</p>
+            <p class="per">/ mes</p>
+            <p class="desc">Clases ilimitadas: disfruta de tantas clases como desees al mes (1 reserva al día).</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan">
+            <h3>Box ilimitado premium</h3>
+            <p class="amount"><span class="cur">€</span>99,90</p>
+            <p class="per">/ mes</p>
+            <p class="desc">Clases ilimitadas con 2 reservas al día para quien quiere doblar sesión.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+              </div>
+            </div>
+            <div class="price-block u-mt-3">
+              <p class="kicker kicker--muted">Trimestral</p>
+              <div class="grid g-4 u-mt-2">
+          <div class="plan">
+            <h3>Trimestral 30</h3>
+            <p class="amount"><span class="cur">€</span>195</p>
+            <p class="per">/ 3 meses</p>
+            <p class="desc">30 clases a distribuir como prefieras en 3 meses.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan">
+            <h3>Trimestral 45</h3>
+            <p class="amount"><span class="cur">€</span>225</p>
+            <p class="per">/ 3 meses</p>
+            <p class="desc">45 clases a distribuir como prefieras en 3 meses.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan plan--featured">
+            <h3>Trimestral ilimitado</h3>
+            <p class="amount"><span class="cur">€</span>255</p>
+            <p class="per">/ 3 meses</p>
+            <p class="desc">Clases ilimitadas durante 3 meses (1 reserva al día).</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+          <div class="plan">
+            <h3>Trimestral ilimitado premium</h3>
+            <p class="amount"><span class="cur">€</span>275</p>
+            <p class="per">/ 3 meses</p>
+            <p class="desc">Clases ilimitadas durante 3 meses con 2 reservas al día.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+              </div>
+            </div>
+            <div class="price-block u-mt-3">
+              <p class="kicker kicker--muted">Sin cuota</p>
+              <div class="grid g-4 u-mt-2">
+          <div class="plan plan--free">
+            <h3>Clase de prueba</h3>
+            <p class="amount">Gratis</p>
+            <p class="per">Primera sesión</p>
+            <p class="desc">Reserva tu clase de prueba en nuestro box y conoce el método, las instalaciones y al equipo.</p>
+            <a class="btn" href="clase-gratis.html">Reservar clase gratis</a>
+          </div>
+          <div class="plan">
+            <h3>Drop in</h3>
+            <p class="amount"><span class="cur">€</span>12</p>
+            <p class="per">/ sesión</p>
+            <p class="desc">Sesión de entrenamiento para atletas que no son socios de nuestro box. Ideal si estás de paso por Madrid.</p>
+            <a class="btn btn--ghost" href="contacto.html">Quiero esta tarifa</a>
+          </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="panel-mensual" role="tabpanel" aria-labelledby="tab-mensual" hidden>
             <div class="grid g-4">
           <div class="plan">
             <h3>Box 10</h3>
