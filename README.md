@@ -82,6 +82,22 @@ con dos zonas: el nombre lleva a la página resumen y el chevron despliega los e
 
 ## Notas técnicas
 
+- **Luminosidad**: la base pasó de `#0a0b0c` a `#171b1e` (de L*3 a L*9,5 de claridad
+  percibida) porque el negro anterior solo funcionaba en penumbra: a plena luz o con
+  el brillo bajo, fondo, tarjetas y bandas se fundían en una única mancha. La escala
+  de superficies queda en L* 5,7 (pie) → 9,5 (fondo) → 14 (bandas) → 16,6 (tarjetas).
+  `--ink` y `--ink-rgb` **son el mismo color**: el segundo existe para usarlo con alfa
+  en los degradados que cubren las fotos. Si cambias uno, cambia el otro o aparecen
+  costuras donde un degradado se junta con la sección siguiente.
+- **Velos sobre las fotos**: antes se oscurecía la imagen entera para proteger un texto
+  que solo ocupa la columna izquierda, y llegaba a verse un 3 % de la foto. Ahora el
+  velo vertical solo asienta la cabecera y el borde inferior, y la protección del texto
+  la da un escudo lateral que se apaga al 62 %. El tercio derecho pasa de L*31 a L*46
+  y el peor píxel bajo el titular mantiene 3,9:1 de contraste. Como hay 35 fotos de
+  cabecera distintas, `.hero-content` y `.page-hero .container` llevan además una
+  sombra difusa como red de seguridad.
+- **Alto contraste**: bloque `@media (prefers-contrast:more)` al final de `site.css`
+  que sube otro escalón la paleta a quien lo tenga activado en su sistema.
 - **Responsive** desde 320 px: verificado sin desbordamiento horizontal en las 35 páginas.
 - **Compatibilidad**: JS ES5-compatible sin dependencias; CSS con *fallbacks* para
   `aspect-ratio`, prefijos `-webkit-` en `backdrop-filter`, `clip-path` y `mask-image`.
