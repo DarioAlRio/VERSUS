@@ -1,0 +1,774 @@
+<title>Parte de diagnóstico VERSUS CrossFit</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap">
+
+<style>
+:root{
+  --ground:#eceee9;
+  --surface:#ffffff;
+  --surface-2:#e3e7e1;
+  --ink:#111a17;
+  --ink-2:#33413b;
+  --muted:#5d6b64;
+  --rule:#c3cbc4;
+  --rule-soft:#d8ded8;
+  --accent:#a4552a;
+  --accent-soft:#f2e2d8;
+  --crit:#a52a21;
+  --crit-soft:#f6dedb;
+  --warn:#7d5a0c;
+  --warn-soft:#f4e9cf;
+  --ok:#1e6a53;
+  --ok-soft:#d9ece4;
+  --maxw:70ch;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 96px}
+.col{max-width:var(--maxw);margin-inline:auto}
+
+h1,h2,h3,h4,.mono,.chip,.eyebrow,th,.metric-n,.docket dt,.docket dd{
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.mono,code,kbd,.docket dd,.metric-n,.chip,td.num{
+  font-family:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+
+.docket{
+  border-top:3px solid var(--ink);
+  border-bottom:1px solid var(--rule);
+  padding:28px 0 0;
+  margin-top:40px;
+}
+.docket .eyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+.docket h1{
+  font-size:clamp(38px,7.2vw,74px);
+  font-weight:800;letter-spacing:-.028em;line-height:.98;
+  margin:0 0 6px;text-wrap:balance;
+}
+.docket .sub{
+  font-size:clamp(19px,2.4vw,24px);color:var(--muted);
+  margin:0 0 30px;max-width:38ch;line-height:1.35;
+}
+dl.meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(178px,100%),1fr));
+  gap:0;margin:0;border-top:1px solid var(--rule);
+}
+dl.meta > div{padding:14px 16px 16px 0;border-right:1px solid var(--rule-soft)}
+dl.meta > div:last-child{border-right:0}
+dl.meta dt{
+  font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 5px;
+}
+dl.meta dd{margin:0;font-size:13.5px;font-weight:500;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+
+.verdict{
+  margin:44px 0 0;padding:26px 28px;background:var(--surface);
+  border:1px solid var(--rule);border-left:0;border-right:0;
+}
+.verdict p{margin:0;font-size:21px;line-height:1.5}
+.verdict p + p{margin-top:14px}
+.verdict strong{font-weight:600;color:var(--accent)}
+
+section{margin-top:80px;scroll-margin-top:24px}
+h2{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0 0 6px;text-wrap:balance}
+h2 .h2n{display:block;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);margin-bottom:10px}
+.lede{color:var(--muted);font-size:19px;margin:0 0 4px;max-width:62ch}
+.sec-rule{border:0;border-top:2px solid var(--ink);margin:0 0 22px}
+
+p{margin:0 0 18px}
+a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
+
+.find{border-top:1px solid var(--rule);padding:22px 0 4px}
+.find:first-of-type{border-top:1px solid var(--ink)}
+.find-head{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:baseline;margin-bottom:10px}
+.chip{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:4px 8px 3px;white-space:nowrap}
+.chip.c{background:var(--crit-soft);color:var(--crit)}
+.chip.w{background:var(--warn-soft);color:var(--warn)}
+.chip.o{background:var(--ok-soft);color:var(--ok)}
+.chip.n{background:var(--surface-2);color:var(--muted)}
+.find h3{font-size:20px;font-weight:700;letter-spacing:-.012em;margin:0;line-height:1.25;flex:1 1 260px}
+.find p{font-size:17px;margin:0 0 14px}
+.find p:last-child{margin-bottom:18px}
+
+code{font-size:.86em;background:var(--surface-2);padding:2px 5px;overflow-wrap:anywhere}
+pre{
+  font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.6;
+  background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);
+  padding:14px 16px;margin:0 0 16px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;
+}
+pre code{background:none;padding:0;font-size:inherit}
+
+.metrics{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));
+  gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);margin:0 0 22px;
+}
+.metric{background:var(--surface);padding:16px 18px}
+.metric-n{display:block;font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.metric-n.bad{color:var(--crit)}
+.metric-n.mid{color:var(--warn)}
+.metric-n.ok{color:var(--ok)}
+.metric-l{display:block;margin-top:7px;font-family:"Archivo",sans-serif;font-size:12px;line-height:1.35;color:var(--muted)}
+
+.tablebox{overflow-x:auto;margin:0 0 22px;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;background:var(--surface);font-size:14px}
+th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+th{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.mono{font-size:12.5px}
+.bad{color:var(--crit);font-weight:500}
+.good{color:var(--ok);font-weight:500}
+
+ul,ol{margin:0 0 18px;padding-left:1.25em}
+li{margin-bottom:7px}
+li::marker{color:var(--muted)}
+ul.tight li{margin-bottom:3px}
+
+.swatches{display:flex;flex-wrap:wrap;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);margin:0 0 22px}
+.sw{flex:1 1 118px;background:var(--surface);padding:0}
+.sw i{display:block;height:52px}
+.sw span{display:block;padding:9px 11px;font-family:"JetBrains Mono",monospace;font-size:11px;line-height:1.5;color:var(--muted)}
+.sw b{display:block;color:var(--ink);font-weight:500}
+
+.callout{background:var(--accent-soft);border-top:2px solid var(--accent);padding:20px 22px;margin:0 0 22px}
+.callout p{margin:0;font-size:17px}
+.callout p + p{margin-top:12px}
+
+.facts dt{font-family:"Archivo",sans-serif;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:15px}
+.facts dd{margin:3px 0 0;font-size:17px}
+.facts dd .mono{font-size:15px}
+
+footer.end{margin-top:88px;padding-top:22px;border-top:2px solid var(--ink);font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted)}
+footer.end p{margin:0 0 6px}
+
+@media (max-width:640px){
+  body{font-size:17px}
+  dl.meta > div{border-right:0;border-bottom:1px solid var(--rule-soft)}
+  .verdict{padding:20px 18px}
+}
+
+@page{size:A4;margin:14mm 13mm 16mm}
+@media print{
+  body{background:#fff;font-size:10.5pt;line-height:1.5}
+  .wrap{max-width:none;padding:0}
+  .col{max-width:none}
+  .docket{margin-top:0;padding-top:0}
+  .docket h1{font-size:34pt}
+  .docket .sub{font-size:13pt;max-width:none}
+  dl.meta dd{font-size:8.5pt}
+  .verdict{margin-top:20px;padding:14px 16px;break-inside:avoid}
+  .verdict p{font-size:12pt}
+  section{margin-top:26px}
+  h2{font-size:17pt;break-after:avoid}
+  .sec-rule{break-after:avoid}
+  .find{break-inside:avoid;padding:13px 0 2px}
+  .find h3{font-size:12.5pt}
+  .find p{font-size:10.5pt;margin-bottom:9px}
+  .metrics,.tablebox,.callout,pre,.swatches{break-inside:avoid}
+  table{font-size:8.5pt}
+  th,td{padding:5px 8px}
+  pre{font-size:8pt;padding:9px 11px}
+  .metric-n{font-size:19pt}
+  .metric-l{font-size:8pt}
+  .facts dd{font-size:10.5pt}
+  li{margin-bottom:5px}
+  footer.end{margin-top:30px;font-size:8.5pt}
+  a{color:var(--ink);text-decoration:none}
+}
+</style>
+
+<div class="wrap">
+
+<header class="docket col">
+  <p class="eyebrow">Parte de diagnóstico · barrido completo del código</p>
+  <h1>versuscrossfit.com</h1>
+  <p class="sub">Qué hay montado hoy, qué está roto y qué se conserva para reconstruirlo.</p>
+  <dl class="meta">
+    <div><dt>Fecha del barrido</dt><dd>28 ago 2026</dd></div>
+    <div><dt>Gestor</dt><dd>WordPress 4.9.26</dd></div>
+    <div><dt>Tema</dt><dd>FitWP · jQuery 1.12.4</dd></div>
+    <div><dt>Base técnica</dt><dd>Skeleton · flexslider · superfish · prettyPhoto</dd></div>
+    <div><dt>URLs en sitemap</dt><dd>1.816 (1.016 entradas + 749 adjuntos + 34 páginas)</dd></div>
+    <div><dt>Servidor</dt><dd>LiteSpeed · HTTP/1.1 · brotli · caché desactivada</dd></div>
+  </dl>
+</header>
+
+<div class="col">
+
+<div class="verdict">
+  <p>El box funciona. La web no. VERSUS es un box de más de 1.000 m² con siete disciplinas, siete entrenadores y ocho años de comunidad, y lo está contando desde un WordPress <strong>4.9</strong> —una rama de 2017— con un tema comprado en 2018 al que se le fueron pegando parches hasta que dejaron de sostenerse.</p>
+  <p>Hay tres roturas que cuestan dinero hoy mismo: los <strong>tres documentos legales obligatorios devuelven 404</strong> —incluido el que enlaza el propio aviso de cookies—, hay <strong>dos listas de precios distintas publicadas a la vez</strong>, y en la página de la clase de prueba gratis el <strong>número de WhatsApp tiene un dígito mal</strong>. A eso se le suma que la portada abre con entrenamientos de septiembre de 2019 y que no hay ni una herramienta de medición instalada: nadie sabe cuánta gente entra ni por dónde se va.</p>
+  <p>La recomendación es <strong>reconstrucción completa</strong>. La marca, las fotos, los textos de las clases y las fichas de los entrenadores se conservan; el gestor, el tema y la arquitectura de URLs no se salvan.</p>
+</div>
+
+<section id="legal">
+  <h2><span class="h2n">01 / Crítico</span>La web no tiene documentos legales</h2>
+  <hr class="sec-rule">
+  <p class="lede">Esto no es una mejora pendiente. Es el bloque que expone al negocio a una sanción de la AEPD y a la reclamación de cualquier usuario.</p>
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">3</span><span class="metric-l">documentos legales obligatorios que devuelven <code>404</code></span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">casillas de consentimiento en el formulario de contacto</span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">botones de rechazar o configurar cookies</span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">datos identificativos del titular publicados</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>Aviso legal, privacidad y cookies: las tres páginas no existen</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>URL</th><th>Respuesta</th><th>Quién la enlaza</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/aviso-legal/</td><td class="bad">404</td><td>Nadie</td></tr>
+          <tr><td class="mono">/politica-de-privacidad/</td><td class="bad">404</td><td>Nadie</td></tr>
+          <tr><td class="mono">/politica-de-cookies/</td><td class="bad">404</td><td class="bad">El propio banner de cookies</td></tr>
+          <tr><td class="mono">/contacto/</td><td class="bad">404</td><td>Nadie</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>El pie de página no enlaza ningún documento legal: solo <code>© CROSSFIT VSG - TODOS LOS DERECHOS RESERVADOS.</code> y los iconos sociales. La LSSI (art. 10) obliga a publicar razón social, CIF y domicilio de forma permanente y accesible; hoy no aparecen en ninguna página del sitio.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El banner de cookies usa consentimiento por navegación</h3></div>
+    <p>El texto literal del aviso es este:</p>
+    <pre><code>Este sitio web utiliza cookies para que usted tenga la mejor experiencia
+de usuario. Si continúa navegando está dando su consentimiento para la
+aceptación de las mencionadas cookies […] pinche el enlace para mayor
+información.                                            [ ACEPTAR ]</code></pre>
+    <p>«Si continúa navegando está dando su consentimiento» dejó de ser válido en España en 2020, cuando la AEPD actualizó su guía siguiendo al Comité Europeo de Protección de Datos. El banner tiene un único botón, <em>ACEPTAR</em>: no hay rechazar, no hay configurar, no hay granularidad por finalidad. Y el enlace a «política de cookies» que ofrece como alternativa lleva a un 404.</p>
+    <p>El plugin responsable es <code>asesor-cookies-para-la-ley-en-espana</code>, que implementa el modelo legal anterior a 2020.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El formulario recoge datos personales sin informar de nada</h3></div>
+    <p>El formulario del panel «Contacto» pide nombre, email y mensaje, y los envía a <code>wp-content/themes/FitWP/processForm.php</code>. No lleva casilla de consentimiento, ni enlace a política de privacidad, ni una línea sobre quién trata los datos, con qué finalidad o durante cuánto tiempo. Es el mínimo del artículo 13 del RGPD y no está.</p>
+    <p>Además el marcado está roto: hay un <code>&lt;form&gt;&lt;/form&gt;&lt;/form&gt;</code> huérfano justo encima del formulario real, y el botón de envío dice <code>Send Email</code>, en inglés.</p>
+  </div>
+</section>
+
+<section id="fugas">
+  <h2><span class="h2n">02 / Crítico</span>Fugas en la captación de socios</h2>
+  <hr class="sec-rule">
+  <p class="lede">Todo lo de esta sección afecta a una persona que ya quiere apuntarse y no encuentra cómo.</p>
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">2</span><span class="metric-l">listas de precios distintas publicadas a la vez</span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">enlaces o botones en la página de precios</span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">herramientas de analítica instaladas</span></div>
+    <div class="metric"><span class="metric-n bad">1</span><span class="metric-l">dígito mal en el WhatsApp de la clase gratis</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>Dos tarifas publicadas, y no dicen lo mismo</h3></div>
+    <p>El menú lleva a <code>/precios/</code>. Pero <code>/tarifas/</code> sigue publicada, indexable y listada en el <code>sitemap.xml</code>, con el título puesto a <em>«Tarifas CrossFit (nuevo)»</em>. Quien llegue desde Google puede caer en cualquiera de las dos:</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Concepto</th><th class="num">/precios/ (menú)</th><th class="num">/tarifas/ (indexada)</th><th class="num">Diferencia</th></tr></thead>
+        <tbody>
+          <tr><td>Drop in, no socios</td><td class="num">12 €</td><td class="num">10 €</td><td class="num bad">−2 €</td></tr>
+          <tr><td>Bono Box 10</td><td class="num">69,90 €</td><td class="num">65 €</td><td class="num bad">−4,90 €</td></tr>
+          <tr><td>Bono Box 15</td><td class="num">79,90 €</td><td class="num">75 €</td><td class="num bad">−4,90 €</td></tr>
+          <tr><td>Ilimitado mensual</td><td class="num">89,90 €</td><td class="num">85 €</td><td class="num bad">−4,90 €</td></tr>
+          <tr><td>Trimestral 30</td><td class="num">195 €</td><td class="num">180 €</td><td class="num bad">−15 €</td></tr>
+          <tr><td>Trimestral 45</td><td class="num">225 €</td><td class="num">210 €</td><td class="num bad">−15 €</td></tr>
+          <tr><td>Trimestral ilimitado</td><td class="num">255 €</td><td class="num">240 €</td><td class="num bad">−15 €</td></tr>
+          <tr><td>Curso Foundation</td><td class="num">no aparece</td><td class="num">65 €</td><td class="num">—</td></tr>
+          <tr><td>Ilimitado Premium (2 reservas/día)</td><td class="num">99,90 € / 275 €</td><td class="num">no aparece</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Un socio potencial que llegue a la página antigua ve precios entre un 5 % y un 8 % más baratos, y un curso de iniciación que la página nueva no menciona. Si luego se le cobra la tarifa vigente, la reclamación tiene fundamento: ambas están publicadas por el titular en su propio dominio.</p>
+    <p>La página antigua además dice <em>«Reserve su clase de prueba en <strong>cualquiera</strong> de nuestros Box»</em>, en plural: texto heredado de cuando existía la sede de Fuenlabrada.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El WhatsApp de la página de clase gratis tiene un número equivocado</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Dónde</th><th>Número publicado</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/solicita-clase-de-prueba-gratis/</td><td class="mono bad">+34 640 835 <strong>167</strong></td></tr>
+          <tr><td class="mono">Pie de página (todas las páginas)</td><td class="mono good">+34 640 835 <strong>165</strong></td></tr>
+          <tr><td class="mono">Panel «Contacto» de la cabecera</td><td class="mono good">640 835 <strong>165</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La página de la clase de prueba gratuita es, por definición, la que reciben las personas que todavía no son socias. Es la única del sitio con el número mal.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>La página de precios no tiene ni un solo enlace</h3></div>
+    <p>Se listan las nueve tarifas con su descripción y su precio, y ahí se acaba. No hay botón de reservar, ni de llamar, ni de escribir, ni un enlace a la clase de prueba gratis. El visitante llega al momento exacto de decidir y la página no le ofrece ninguna salida: tiene que volver al menú y buscar por su cuenta.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El email no es pulsable en ningún sitio</h3></div>
+    <p><code>getafe@versuscrossfit.com</code> aparece en el pie y en la página de clase gratis, y en los dos casos el enlace es falso:</p>
+    <pre><code>Pie:          &lt;a href="#"&gt;getafe@versuscrossfit.com&lt;/a&gt;
+Clase gratis: &lt;a href="https://www.versuscrossfit.com/#"&gt;getafe@versuscrossfit.com&lt;/a&gt;</code></pre>
+    <p>Ninguno abre el correo. En móvil, pulsar el email no hace absolutamente nada.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>«Reservar clase» lleva a la portada genérica de CrossHero</h3></div>
+    <p>El enlace del panel de reservas apunta a <code>http://www.crosshero.com</code>: la web comercial del software, no la página de reservas del box. El visitante aterriza en un sitio que no conoce, sin ninguna referencia a VERSUS, y tiene que buscarse la vida. El enlace además va por <code>http://</code>, sin cifrar.</p>
+    <p>El enlace a la app de iOS usa <code>itunes.apple.com/us/app/…</code>: dominio retirado por Apple y tienda de Estados Unidos.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>El WhatsApp no es un WhatsApp</h3></div>
+    <p>En el pie, bajo la etiqueta «WhatsAPP», el enlace es <code>tel:640835165</code>. Al pulsarlo se abre el marcador telefónico, no la conversación. No hay ni un solo enlace <code>wa.me</code> en toda la web, y tampoco hay botón flotante de contacto en móvil.</p>
+    <p>El otro acceso al teléfono es un desplegable <code>&lt;select&gt;</code> con dos opciones («Fijo», «Móvil») que abre el número en una ventana nueva mediante JavaScript. Es un patrón de 2012: en un box local, llamar tiene que ser un botón.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>No hay ninguna analítica instalada</h3></div>
+    <p>Ni Google Analytics 4, ni Google Tag Manager, ni píxel de Meta, ni Matomo, ni Clarity. Nada. En el <code>&lt;head&gt;</code> quedan las pistas DNS que traía el tema (<code>googletagmanager.com</code>, <code>connect.facebook.net</code>, <code>googleads.g.doubleclick.net</code>) pero ningún script que las use.</p>
+    <p>Consecuencia práctica: no se sabe cuántas personas visitan la web, ni por qué palabras llegan, ni cuántas ven la página de precios, ni cuántas de las que la ven acaban pidiendo la clase gratis. Cualquier inversión en publicidad hoy se hace a ciegas.</p>
+  </div>
+</section>
+
+<section id="seguridad">
+  <h2><span class="h2n">03 / Crítico</span>Seguridad y mantenimiento</h2>
+  <hr class="sec-rule">
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>WordPress 4.9, ocho versiones mayores por detrás</h3></div>
+    <p>El gestor se identifica solo, en tres sitios distintos:</p>
+    <pre><code>&lt;meta name="generator" content="WordPress 4.9.26" /&gt;
+wp-includes/js/wp-emoji-release.min.js?ver=4.9.26
+wp-includes/js/jquery/jquery.js?ver=1.12.4</code></pre>
+    <p>La rama 4.9 salió en noviembre de 2017. Todo lo que se apoya encima es de la misma época: el tema <em>FitWP</em>, el grid <em>Skeleton</em> y los plugins jQuery <em>prettyPhoto</em>, <em>superfish</em> y <em>flexslider</em>. Ninguno recibe mantenimiento. <code>readme.html</code> está accesible públicamente y confirma la versión a cualquiera que la pida.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El usuario administrador está publicado</h3></div>
+    <p>La API pública de WordPress lo entrega sin autenticación:</p>
+    <pre><code>GET /wp-json/wp/v2/users  →  200 OK
+[{"id":1, "name":"David", "slug":"david", … }]</code></pre>
+    <p>Eso es la mitad de las credenciales. La otra mitad se ataca en <code>/wp-login.php</code>, que responde 200 y no muestra ninguna limitación de intentos. Sobre un WordPress 4.9 sin actualizar, es la combinación que se prueba primero.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Cero cabeceras de seguridad</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Cabecera</th><th>Estado</th><th>Qué evita</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Strict-Transport-Security</td><td class="bad">ausente</td><td>Degradar la conexión a HTTP</td></tr>
+          <tr><td class="mono">Content-Security-Policy</td><td class="bad">ausente</td><td>Inyección de scripts de terceros</td></tr>
+          <tr><td class="mono">X-Frame-Options</td><td class="bad">ausente</td><td>Que embeban la web en un iframe ajeno</td></tr>
+          <tr><td class="mono">X-Content-Type-Options</td><td class="bad">ausente</td><td>Interpretación errónea de tipos MIME</td></tr>
+          <tr><td class="mono">Referrer-Policy</td><td class="bad">ausente</td><td>Filtrar la URL de origen a terceros</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Sí funcionan bien la redirección de <code>http://</code> a <code>https://</code> y la del dominio sin <code>www</code> al dominio con <code>www</code>, ambas con un 301 limpio.</p>
+  </div>
+</section>
+
+<section id="caducado">
+  <h2><span class="h2n">04 / Grave</span>Lo que la web cuenta hoy</h2>
+  <hr class="sec-rule">
+  <p class="lede">Un visitante que llega a la portada ve, sin bajar mucho, entrenamientos de hace siete años.</p>
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">2019</span><span class="metric-l">año de los WOD que abren el bloque «Ultimos WOD» de la portada</span></div>
+    <div class="metric"><span class="metric-n bad">11</span><span class="metric-l">meses desde la última noticia publicada</span></div>
+    <div class="metric"><span class="metric-n bad">927</span><span class="metric-l">de las 1.016 entradas son de 2018 y 2019</span></div>
+    <div class="metric"><span class="metric-n bad">749</span><span class="metric-l">páginas de adjunto indexadas sin contenido</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>La portada abre entrenamientos de septiembre de 2019</h3></div>
+    <p>El bloque «Ultimos WOD», en mitad de la página principal, lista esto:</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Entrada</th><th>Fecha real</th><th class="num">Antigüedad</th></tr></thead>
+        <tbody>
+          <tr><td>HERO WEEK</td><td class="mono">14 may 2023</td><td class="num bad">3 años</td></tr>
+          <tr><td>WOD CrossFit 180919</td><td class="mono">18 sep 2019</td><td class="num bad">7 años</td></tr>
+          <tr><td>WOD CrossFit 070919</td><td class="mono">7 sep 2019</td><td class="num bad">7 años</td></tr>
+          <tr><td>WOD CrossFIt 060919</td><td class="mono">6 sep 2019</td><td class="num bad">7 años</td></tr>
+          <tr><td>WOD CrossFit 030919</td><td class="mono">3 sep 2019</td><td class="num bad">7 años</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Nótese además la errata en «CrossFIt». Para alguien que está valorando el box, un tablón de entrenamientos parado en 2019 es la señal más fuerte que da la página, y dice justo lo contrario de lo que pasa dentro del box.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>La última noticia anuncia un evento que ya pasó</h3></div>
+    <p>La entrada más reciente del sitio es del <strong>30 de septiembre de 2025</strong> y anuncia el HYROX PFT del <strong>sábado 8 de noviembre</strong>. Nueve meses después de la fecha del evento sigue siendo lo primero que aparece en «Últimas noticias», en la portada y en el pie de todas las páginas.</p>
+    <p>El ritmo de publicación del blog: 588 entradas en 2018, 339 en 2019, 17 en 2020, 12 en 2021, 2 en 2022, 29 en 2023, 11 en 2024 y 18 en 2025.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Dos páginas publicadas que dicen solo «Información…»</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>URL</th><th>Contenido completo</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/nosotros/box-getafe/</td><td class="bad">«Información…»</td><td>En el sitemap, indexable</td></tr>
+          <tr><td class="mono">/nosotros/box-fuenlabrada/</td><td class="bad">«Información…»</td><td>En el sitemap, indexable</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La de Fuenlabrada corresponde a una sede que ya no está en el menú ni en los datos de contacto. Sigue publicada, enlazada desde <code>/nosotros/</code> y ofrecida a Google.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>La sección «quiénes somos» está duplicada entera</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Rama</th><th>Enlazada desde</th><th class="num">Palabras</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/conocenos/</td><td>Menú principal</td><td class="num">24</td></tr>
+          <tr><td class="mono">/nosotros/</td><td>Botón del pie</td><td class="num">29</td></tr>
+          <tr><td class="mono">/conocenos/box-getafe/</td><td>Menú principal</td><td class="num">168</td></tr>
+          <tr><td class="mono">/nosotros/box-getafe/</td><td>/nosotros/</td><td class="num bad">2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>El botón «Más Información» del pie de página lleva a la rama vacía. Y el texto real del box —los 1.000 m², el parking propio, la zona de tarimas de halterofilia— vive en la otra, a la que solo se llega por el menú.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Interfaz a medias en inglés</h3></div>
+    <p>Cadenas del tema que nunca se tradujeron y que ve el visitante español: <code>MORE INFO</code> en las tarjetas de clases y entrenadores, <code>DIFFICULTY LEVEL</code> y <code>TRAINERS</code> en cada ficha de clase, y <code>Send Email</code> en el botón del formulario de contacto.</p>
+    <p>Aparte, hay erratas de redacción visibles: «¡Envia un email!» sin tilde, y «Entrena de nuestro box en Getafe con mas de 1000m2» en la descripción que Google muestra en los resultados de búsqueda.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip n">A decidir</span><h3>Caracteres de Instagram copiados en los títulos</h3></div>
+    <p>Varias entradas usan las letras decorativas de Instagram, que no son letras sino símbolos matemáticos del bloque Unicode:</p>
+    <pre><code>𝙑𝙚𝙧𝙨𝙪𝙨 𝙃𝙚𝙧𝙤 𝙒𝙚𝙚𝙠</code></pre>
+    <p>Un lector de pantalla los deletrea uno a uno; Google no los reconoce como «Versus Hero Week». Hay además una URL de entrada compuesta enteramente por emojis codificados: <code>/2024/11/23/%e2%9c%85-%f0%9f%94%a7-hoy-tocaba-puesta-a-punto…</code></p>
+  </div>
+</section>
+
+<section id="seo">
+  <h2><span class="h2n">05 / Grave</span>SEO y arquitectura de contenidos</h2>
+  <hr class="sec-rule">
+  <p class="lede">El box compite por «crossfit getafe» y «hyrox getafe». La web no está preparada para ganar ninguna de las dos.</p>
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">páginas internas con meta descripción</span></div>
+    <div class="metric"><span class="metric-n bad">6</span><span class="metric-l">etiquetas <code>H1</code> por cada ficha de clase o entrenador</span></div>
+    <div class="metric"><span class="metric-n bad">119</span><span class="metric-l">caracteres del título de la portada, con la marca repetida</span></div>
+    <div class="metric"><span class="metric-n bad">0</span><span class="metric-l">datos estructurados de negocio local</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El título de cada página lleva la marca pegada dos veces</h3></div>
+    <p>Un fallo de plantilla que afecta a todo el sitio. Esto es lo que recibe Google:</p>
+    <pre><code>Portada:      VERSUS - Box oficial de CrossFit y HyroxVERSUS – CrossFit VSG /
+              HYROX | Somos box Oficial de CrossFit y Hyrox en Getafe   (119 car.)
+Clases:       Clases - VERSUS - CrossFit VSG / HYROXVERSUS – CrossFit VSG / HYROX
+Entrenadores: Entrenadores - VERSUS - CrossFit VSG / HYROXVERSUS – CrossFit VSG / HYROX
+Tarifas:      Tarifas CrossFit (nuevo) - VERSUS - CrossFit VSG / HYROXVERSUS – …</code></pre>
+    <p>Se ve la costura: <code>HYROX</code> y <code>VERSUS</code> quedan pegados sin espacio ni separador, porque hay dos sistemas escribiendo el título a la vez —el tema y Yoast—. Google corta en unos 60 caracteres, así que en los resultados se lee la marca duplicada y se pierde lo que diferencia a cada página.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Ninguna página interna tiene descripción</h3></div>
+    <p>Solo la portada la tiene. Clases, Hyrox, precios, entrenadores, horarios, clase de prueba gratis: todas salen a Google sin meta descripción, así que el buscador improvisa el texto del resultado recortando lo primero que encuentra. En la ficha de Hyrox eso significa que el fragmento empieza por «HYROX es un estilo de entrenamiento funcional que no requiere…» en lugar de por una frase que invite a entrar.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Los encabezados no describen la página</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Página</th><th>H1 que tiene</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/</td><td class="bad">10 H1, todos títulos de entradas de blog de 2019 y 2025</td></tr>
+          <tr><td class="mono">/Clases/crossfit/</td><td class="bad">6 H1: el de la clase más los 5 de la barra lateral</td></tr>
+          <tr><td class="mono">/Entrenadores/edu/</td><td class="bad">6 H1: el del entrenador más los 5 de la barra lateral</td></tr>
+          <tr><td class="mono">/conocenos/que-es-el-crossfit/</td><td class="bad">Ninguno (850 palabras de texto)</td></tr>
+          <tr><td class="mono">/precios/</td><td class="bad">Ninguno</td></tr>
+          <tr><td class="mono">/conocenos/horarios-y-reservas/</td><td class="bad">Ninguno</td></tr>
+          <tr><td class="mono">/solicita-clase-de-prueba-gratis/</td><td class="bad">Ninguno</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>En la portada no hay ni un solo encabezado que diga qué es VERSUS ni dónde está. El único texto que lo dice —«CrossFit en Getafe!», «GYM oficial en Getafe»— va incrustado dentro de los JPG del carrusel, así que para un buscador no existe.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>Un negocio local sin datos estructurados de negocio local</h3></div>
+    <p>Los únicos datos estructurados del sitio son estos dos, y no aportan nada:</p>
+    <pre><code>{"@type":"WebSite", "name":"VERSUS - CrossFit VSG / HYROX", "potentialAction":{…}}
+{"@type":"Organization", "name":"Versus CrossFit", "sameAs":[],
+ "logo":"…/2023/12/269596923_322015056592867_2394127042094515224_n.jpg"}</code></pre>
+    <p>Falta todo lo que Google usa para posicionar y mostrar un gimnasio: el tipo <code>Gym</code> o <code>SportsActivityLocation</code>, la dirección postal, las coordenadas, el teléfono, el horario de apertura, el rango de precios y las valoraciones. El campo <code>sameAs</code> está vacío pese a que el box tiene Instagram, Facebook, YouTube y X activos, y el logotipo declarado es el nombre de archivo de una foto descargada de Instagram.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>1.816 URLs en el sitemap para una web de 20 páginas útiles</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Sitemap</th><th class="num">URLs</th><th>Qué son</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">post-sitemap 1 y 2</td><td class="num">1.016</td><td>748 de ellas son WOD diarios de 2018–2019</td></tr>
+          <tr><td class="mono">attachment-sitemap</td><td class="num bad">749</td><td>Páginas de adjunto: una imagen suelta y nada más</td></tr>
+          <tr><td class="mono">page-sitemap</td><td class="num">34</td><td>20 son WOD publicados como página, no como entrada</td></tr>
+          <tr><td class="mono">post_classes + post_trainers</td><td class="num good">14</td><td>Las fichas reales de clases y entrenadores</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Las 749 páginas de adjunto son la opción por defecto de Yoast que nadie desactivó: cada imagen subida genera una URL propia con la imagen y ningún texto. Diluyen el rastreo y compiten contra las páginas que sí importan.</p>
+    <p>Los 20 WOD de julio y diciembre de 2018 metidos en el sitemap de páginas son un error de publicación: se crearon como página en lugar de como entrada y quedaron colgando fuera de toda navegación.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Contenido duplicado entre la clase y el artículo</h3></div>
+    <p><code>/Clases/crossfit/</code> (613 palabras) y <code>/conocenos/que-es-el-crossfit/</code> (850 palabras) abren con el mismo párrafo palabra por palabra. Las dos son indexables y compiten entre sí por la misma consulta.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip n">Menor</span><h3>Rutas con mayúsculas y paginación de blog en la portada</h3></div>
+    <p>Las URLs canónicas de las fichas llevan mayúscula: <code>/Clases/hyrox/</code>, <code>/Entrenadores/natalia-paz/</code>. La versión en minúsculas redirige, así que no rompe nada, pero las mayúsculas en rutas se copian mal, se comparten peor y desentonan con el resto del sitio.</p>
+    <p>La portada declara <code>&lt;link rel="next" href="…/page/2/"&gt;</code>: WordPress la trata como la página 1 del blog, no como la home de un negocio. Por eso los H1 de la portada son títulos de entradas.</p>
+  </div>
+</section>
+
+<section id="rendimiento">
+  <h2><span class="h2n">06 / Grave</span>Rendimiento y entrega</h2>
+  <hr class="sec-rule">
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">3,08 MB</span><span class="metric-l">peso de la portada en 48 recursos</span></div>
+    <div class="metric"><span class="metric-n bad">655 KB</span><span class="metric-l">la imagen más pesada, una foto de Instagram sin tocar</span></div>
+    <div class="metric"><span class="metric-n bad">1,36 s</span><span class="metric-l">respuesta del servidor en la primera carga real</span></div>
+    <div class="metric"><span class="metric-n mid">24</span><span class="metric-l">ficheros CSS y JS servidos por separado</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>Fotos de Instagram publicadas tal cual</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Imagen</th><th class="num">Peso</th><th>Tamaño real</th><th>Se muestra a</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">514052970_1287082826752747_…jpg</td><td class="num bad">655 KB</td><td class="mono">1440×1440</td><td class="mono">940×940</td></tr>
+          <tr><td class="mono">508012644_1274064484721248_…jpg</td><td class="num bad">495 KB</td><td class="mono">1440×1800</td><td class="mono">940×1175</td></tr>
+          <tr><td class="mono">hyrox-pft-versus-crossfit-2.jpg</td><td class="num bad">364 KB</td><td class="mono">1440×1920</td><td class="mono">940×1253</td></tr>
+          <tr><td class="mono">504513287_18311510884237771_…jpeg</td><td class="num bad">308 KB</td><td class="mono">1440×1800</td><td class="mono">940×1175</td></tr>
+          <tr><td class="mono">TXT-02-slide-nuestros-box-texto.jpg</td><td class="num bad">280 KB</td><td class="mono">1547×480</td><td class="mono bad">220×68</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Los nombres de archivo delatan el origen: son descargas directas de Instagram, subidas sin redimensionar ni recomprimir. Ninguna imagen del sitio declara <code>loading="lazy"</code> y solo una tiene <code>srcset</code>, así que el navegador se descarga las cinco enteras antes de pintar nada, también en móvil con datos.</p>
+    <p>El caso peor es el carrusel: el mismo JPG de 1547×480 se sirve dos veces, una para el pase grande y otra para la miniatura de navegación de 220×68 píxeles.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>El horario de clases es un JPEG de 416 KB</h3></div>
+    <p><code>NUEVO-HORARIO-CLASES-VERSUS.jpg</code> pesa 416 KB y se muestra a 181×300 píxeles: ilegible sin ampliar. La alternativa que ofrece la página es descargar un PDF de 183 KB.</p>
+    <p>El horario es una de las dos o tres cosas que más se consultan en la web de un box. Hoy no es texto: no se puede leer en el móvil sin ampliar, no lo indexa Google, no lo lee un lector de pantalla y no se puede copiar. Y actualizarlo obliga a rehacer la imagen y el PDF.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>La caché del servidor está instalada pero apagada</h3></div>
+    <p>El servidor es LiteSpeed y el plugin LiteSpeed Cache está activo —lo demuestran las rutas <code>/wp-content/litespeed/css/…</code> de los ficheros combinados—, pero cada respuesta llega con:</p>
+    <pre><code>X-LiteSpeed-Cache-Control: no-cache</code></pre>
+    <p>Es decir: se está pagando el coste de combinar ficheros pero no se aprovecha la caché de página. Cada visita ejecuta PHP y consulta la base de datos desde cero. Medido: 0,37–0,60 s de respuesta con la conexión ya abierta, y 1,36 s en la primera carga real desde el navegador.</p>
+    <p>Tampoco hay cabecera <code>Cache-Control</code> en el HTML. La compresión brotli sí funciona.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Ocho peticiones a wordpress.org solo para pintar emojis</h3></div>
+    <p>WordPress 4.9 carga su script de compatibilidad de emojis, que descarga cada icono como SVG desde <code>s.w.org</code>: ocho peticiones a un dominio externo, de 150×150 px cada una, para mostrar iconos de 14 píxeles en los títulos de las entradas. Todas las versiones modernas permiten desactivarlo; esta no lo tiene desactivado.</p>
+    <p>En total la cabecera carga <strong>15 hojas de estilo</strong> y <strong>9 scripts</strong> externos: 24 ficheros para una página que muestra un carrusel, cinco noticias y un pie.</p>
+  </div>
+</section>
+
+<section id="accesibilidad">
+  <h2><span class="h2n">07 / Grave</span>Accesibilidad y experiencia móvil</h2>
+  <hr class="sec-rule">
+
+  <div class="metrics">
+    <div class="metric"><span class="metric-n bad">2,07:1</span><span class="metric-l">contraste del verde de marca con texto blanco (mínimo 4,5:1)</span></div>
+    <div class="metric"><span class="metric-n bad">14</span><span class="metric-l">combinaciones de color por debajo del mínimo AA</span></div>
+    <div class="metric"><span class="metric-n bad">16</span><span class="metric-l">de 25 imágenes de la portada sin texto alternativo útil</span></div>
+    <div class="metric"><span class="metric-n bad">24</span><span class="metric-l">de 103 enlaces con área táctil menor de 24 px</span></div>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>La web bloquea el zoom en el móvil</h3></div>
+    <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"&gt;</code></pre>
+    <p><code>maximum-scale=1</code> impide ampliar la página con los dedos. Para cualquier persona con vista cansada —una parte nada pequeña del público de un box— eso convierte en inutilizables el horario en JPEG y los textos de 11 px del pie. Es un incumplimiento directo del criterio 1.4.4 de las WCAG y está desaconsejado desde hace más de una década.</p>
+    <p>Se le suma <code>&lt;meta name="format-detection" content="telephone=no"&gt;</code>, que desactiva la detección automática de teléfonos: los números escritos como texto plano en el pie y en las fichas no se pueden pulsar para llamar.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip c">Crítico</span><h3>El verde de la marca no tiene contraste suficiente</h3></div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#06d100"></i><span><b>#06d100</b>fondo de marca</span></div>
+      <div class="sw"><i style="background:#0dd100"></i><span><b>#0dd100</b>color de enlaces</span></div>
+      <div class="sw"><i style="background:#828282"></i><span><b>#828282</b>texto secundario</span></div>
+      <div class="sw"><i style="background:#787b81"></i><span><b>#787b81</b>texto del pie</span></div>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Dónde</th><th>Combinación</th><th class="num">Contraste</th><th class="num">Mínimo</th></tr></thead>
+        <tbody>
+          <tr><td>Menú activo, fechas de entrada, títulos del pie</td><td class="mono">blanco sobre #06d100</td><td class="num bad">2,07:1</td><td class="num">4,5:1</td></tr>
+          <tr><td>Buscador de la barra superior</td><td class="mono">negro sobre #3e3f40</td><td class="num bad">1,99:1</td><td class="num">4,5:1</td></tr>
+          <tr><td>Menú principal en reposo</td><td class="mono">#828282 sobre #424445</td><td class="num bad">2,55:1</td><td class="num">4,5:1</td></tr>
+          <tr><td>Teléfono del pie</td><td class="mono">#787b81 sobre #303234</td><td class="num bad">3,03:1</td><td class="num">4,5:1</td></tr>
+          <tr><td>Títulos de noticias del pie</td><td class="mono">#828282 sobre #262729</td><td class="num bad">3,89:1</td><td class="num">4,5:1</td></tr>
+          <tr><td>Enlace «política de cookies» del banner</td><td class="mono">#ff8888 sobre #444</td><td class="num bad">4,23:1</td><td class="num">4,5:1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>El verde <code>#06d100</code> es el color con el que la web marca todo lo importante: la pestaña activa del menú, la fecha de cada noticia, los títulos de los bloques del pie. Con texto blanco encima se queda en 2,07:1, menos de la mitad del mínimo exigido. Es un problema de paleta, no de píxeles sueltos: un verde puro necesita texto oscuro encima, o hay que oscurecer el verde.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Los textos comerciales están dentro de las imágenes</h3></div>
+    <p>Los cuatro pases del carrusel son JPEG de 1547×480 con el texto rasterizado dentro: «CrossFit en Getafe!», «Hyrox — GYM oficial en Getafe», «Conoce nuestro Box!», «CLASE GRATIS!». Los archivos se llaman literalmente <code>TXT-01-slide-nuevo-box-texto-2.jpg</code>.</p>
+    <p>Consecuencias: el mensaje principal del negocio no lo lee Google ni un lector de pantalla, no se adapta al ancho del móvil, se ve pixelado en pantallas de alta densidad, y cambiar una palabra exige rehacer la imagen en un editor gráfico.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Imágenes sin describir y menú móvil de 2012</h3></div>
+    <p>De las 25 imágenes de la portada, 6 no tienen atributo <code>alt</code> y 10 lo tienen vacío. Entre las que faltan está el logotipo de la cabecera, que es además el enlace a la portada: un lector de pantalla anuncia ese enlace sin nombre.</p>
+    <p>En móvil el menú principal se convierte en un desplegable <code>&lt;select&gt;</code> nativo, sin submenús: las siete clases y los siete entrenadores desaparecen de la navegación. 24 de los 103 enlaces de la página miden menos de 24 píxeles de alto o de ancho, por debajo del mínimo táctil recomendado. Lo bueno: la página no desborda horizontalmente a 375 px de ancho.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>Los iconos de redes se cargan desde webs ajenas</h3></div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Icono</th><th>De dónde se descarga</th></tr></thead>
+        <tbody>
+          <tr><td>Instagram</td><td class="mono bad">atirupiedrallangreu.files.wordpress.com</td></tr>
+          <tr><td>Twitter</td><td class="mono bad">vignette.wikia.nocookie.net/glee/…</td></tr>
+          <tr><td>YouTube</td><td class="mono bad">cdn-icons-png.flaticon.com</td></tr>
+          <tr><td>Insignia CrossFit Journal</td><td class="mono bad">journal.crossfit.com → error 503</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>El icono de Instagram se sirve desde el blog de un grupo de senderismo asturiano y el de Twitter desde una wiki de la serie <em>Glee</em>. Son webs sobre las que VERSUS no tiene ningún control: el día que borren esos archivos, los iconos desaparecen del pie. Y cada visitante que carga la portada envía su IP a esos cuatro dominios sin saberlo.</p>
+    <p>La insignia de CrossFit Journal ya está rota: devuelve 503 y en el pie se ve el hueco de la imagen que no carga.</p>
+  </div>
+</section>
+
+<section id="codigo">
+  <h2><span class="h2n">08 / Inventario</span>Restos de código en producción</h2>
+  <hr class="sec-rule">
+  <p class="lede">Ninguno de estos rompe la web por sí solo. Juntos dicen cuánto mantenimiento ha tenido el sitio.</p>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>La primera línea del &lt;head&gt; es una plantilla sin rellenar</h3></div>
+    <pre><code>&lt;link rel=”stylesheet” href=”tucarpeta/css/font-awesome.min.css“&gt;</code></pre>
+    <p>Está antes incluso de <code>&lt;meta charset&gt;</code>. Lleva comillas tipográficas en vez de comillas rectas y la ruta literal <code>tucarpeta</code>, tal como venía en el tutorial del que se copió. El navegador la ignora, pero es la primera instrucción que recibe.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip w">Grave</span><h3>CSS de depuración publicado</h3></div>
+    <pre><code>&lt;style id="wp-custom-css"&gt;
+.pageInfo{background:green}
+.footerModule h2{background:green}
+.page-id-183 .pageInfo{background:green}
+.page-id-183.footerModule h2{background:green}
+&lt;/style&gt;</code></pre>
+    <p>Cuatro reglas con el color <code>green</code> puesto por su nombre, no con el verde de la marca. Son pruebas que alguien dejó ahí y que hoy pintan las cabeceras de sección. En la hoja del tema aparecen además declaraciones vacías (<code>color:</code>, <code>background:</code>) que el navegador descarta.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-head"><span class="chip n">Menor</span><h3>Etiquetas mal cerradas y recursos que no existen</h3></div>
+    <ul>
+      <li>Dos <code>&lt;img&gt;</code> del pie abren el <code>src</code> sin comillas y lo cierran con una: <code>src=https://…facebook_22567.png"</code>. La comilla acaba dentro de la URL.</li>
+      <li>Un <code>&lt;form&gt;&lt;/form&gt;&lt;/form&gt;</code> huérfano encima del formulario de contacto, y un <code>&lt;/p&gt;&lt;p&gt;</code> suelto dentro de un <code>&lt;h3&gt;</code> del pie.</li>
+      <li><code>&lt;link rel="shortcut icon" href="images/favicon.ico"&gt;</code> y los tres <code>apple-touch-icon</code> apuntan a rutas relativas que devuelven <strong>404</strong>.</li>
+      <li>El <em>polyfill</em> de HTML5 se pide a <code>html5shim.googlecode.com</code>: Google Code cerró en 2016 y la URL devuelve 404.</li>
+      <li>Comentarios condicionales y hojas de estilo específicas para Internet Explorer 6, 7 y 8, con la marca <code>lang="en"</code>.</li>
+      <li>Etiquetas de una web de 2011 que siguen ahí: <code>SKYPE_TOOLBAR</code>, <code>wlwmanifest.xml</code> (Windows Live Writer), <code>EditURI</code> RSD y <code>rel="pingback"</code>.</li>
+      <li>Los paneles «Horario» y «Contacto» de la barra superior se abren con <code>href="#"</code> y JavaScript: sin scripts, ese contenido no existe.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="datos">
+  <h2><span class="h2n">09 / Se conserva</span>Datos verificados del negocio</h2>
+  <hr class="sec-rule">
+  <p class="lede">Todo lo de esta sección está comprobado en la web actual y pasa tal cual al sitio nuevo. Lo que no está aquí, hay que pedírselo al cliente.</p>
+
+  <dl class="facts">
+    <dt>Nombre</dt><dd>VERSUS CrossFit Getafe · CrossFit VSG · box oficial de CrossFit y de HYROX</dd>
+    <dt>Dirección</dt><dd>C/ Sindicalismo 3 y 5 (Pol. ind. Los Olivos), 28906 Getafe, Madrid · con aparcamiento propio</dd>
+    <dt>Teléfonos</dt><dd><span class="mono">+34 910 849 952</span> (fijo) · <span class="mono">+34 640 835 165</span> (móvil y WhatsApp)</dd>
+    <dt>Email</dt><dd><span class="mono">getafe@versuscrossfit.com</span></dd>
+    <dt>Instalaciones</dt><dd>Más de 1.000 m², zona de tarimas de halterofilia, clases guiadas</dd>
+    <dt>Horario</dt><dd>Mañanas: L–V 7:00–13:00, S 9:00–14:30 · Mediodía: L–J 14:30–15:30 · Tardes: L–J 16:00–22:00, V 16:00–21:00</dd>
+    <dt>Clases</dt><dd>CrossFit · HYROX · Halterofilia · Gymnastic · CrossFit Hybrid Strongman · Yoga + Core · Open Box</dd>
+    <dt>Entrenadores</dt><dd>Natalia Paz · Mateo Santiago · Michel Wu · Eduardo Gonzalo Rodríguez · Santiago Machado · Adrián Blanco · Álex Ferrer</dd>
+    <dt>Tarifas vigentes</dt><dd>Clase de prueba gratis · Drop in 12 € · Box 10 69,90 € · Box 15 79,90 € · Ilimitado 89,90 € · Ilimitado Premium 99,90 € · Trimestral 30 195 € · Trimestral 45 225 € · Trimestral ilimitado 255 € · Trimestral Premium 275 €. Todas incluyen Open Box gratuito los sábados.</dd>
+    <dt>Reservas</dt><dd>CrossHero (app de iOS y Android)</dd>
+    <dt>Redes activas</dt><dd>Instagram <span class="mono">@crossfitvsg</span> · Facebook <span class="mono">/crossfitvsg</span> · YouTube · X <span class="mono">@VSGCrossFit</span></dd>
+    <dt>Antigüedad</dt><dd>El box celebró siete años en marzo de 2025: abierto desde marzo de 2018</dd>
+    <dt>Contenido reutilizable</dt><dd>Las 7 fichas de clase y las 7 de entrenador tienen texto propio y bien escrito, de 309 a 613 palabras cada una. El artículo «Qué es CrossFit» son 850 palabras aprovechables. Es el material con el que se levanta el sitio nuevo.</dd>
+  </dl>
+</section>
+
+<section id="rediseno">
+  <h2><span class="h2n">10 / Propuesta</span>Por dónde entra la reconstrucción</h2>
+  <hr class="sec-rule">
+
+  <div class="callout">
+    <p>El orden importa. Los tres primeros puntos no son diseño: son riesgo legal y dinero que se está perdiendo hoy, y se pueden resolver antes incluso de tocar el aspecto de la web.</p>
+  </div>
+
+  <ol>
+    <li><strong>Los tres documentos legales, publicados y enlazados desde el pie</strong>, con los datos identificativos del titular. Y un banner de consentimiento real, con rechazar y configurar al mismo nivel que aceptar, que bloquee cualquier cookie no esencial hasta que se acepte.</li>
+    <li><strong>Una sola lista de precios.</strong> Decidir cuál es la vigente, redirigir la otra con un 301 y añadir el curso Foundation si sigue ofreciéndose. Con botón de reservar y de pedir la clase gratis en cada tarifa.</li>
+    <li><strong>Corregir el WhatsApp de la página de clase gratis</strong> y convertir todos los datos de contacto en enlaces que funcionen: <code>tel:</code>, <code>mailto:</code> y <code>wa.me</code>. Barra fija en móvil con Llamar, WhatsApp y Reservar clase de prueba.</li>
+    <li><strong>Analítica desde el primer día</strong>, con consentimiento previo y con los objetivos definidos: clases de prueba solicitadas, llamadas, WhatsApp y visitas a precios. Sin esto no se puede medir si el rediseño funciona.</li>
+    <li><strong>Portada nueva escrita en texto</strong>, no en JPEG: qué es VERSUS, dónde está, qué clases hay, cuánto cuesta y cómo se prueba gratis. Un solo H1 que diga «CrossFit y HYROX en Getafe».</li>
+    <li><strong>El horario, como tabla de texto.</strong> Legible en móvil, indexable y actualizable sin abrir un editor de imágenes. La imagen y el PDF pueden quedarse como descarga complementaria.</li>
+    <li><strong>Reservas que lleven a la página del box en CrossHero</strong>, no a la portada del software. Y explicar en una línea cómo funciona antes de mandar al visitante a una app que no conoce.</li>
+    <li><strong>Datos estructurados de gimnasio</strong> con dirección, teléfono, horario, coordenadas y rango de precios, conectados con el perfil de Google Business. Es lo que decide la posición en «crossfit getafe» y en el mapa.</li>
+    <li><strong>Criba del archivo con el cliente.</strong> Son 1.016 entradas, de las que 748 son WOD de 2018–2019. Hay que decidir qué se migra, qué se redirige y qué se retira, y desactivar de paso las 749 páginas de adjunto. El bloque de WOD de la portada se quita o se alimenta de verdad: dejarlo en 2019 hace más daño que no tenerlo.</li>
+    <li><strong>Sitio propio, sin tema comprado.</strong> Aquí se recuperan los 3 MB y los 24 ficheros, y desaparece de golpe el problema de mantener un WordPress 4.9. Paleta revisada para que el verde de VERSUS cumpla contraste sin dejar de ser el verde de VERSUS.</li>
+    <li><strong>Tabla de redirecciones antes de publicar.</strong> Con 1.816 URLs en el sitemap y rutas con mayúsculas, cualquier reorganización sin 301 se lleva por delante el posicionamiento acumulado en ocho años.</li>
+  </ol>
+</section>
+
+<section id="pendiente">
+  <h2><span class="h2n">11 / Pendiente</span>Lo que no he podido comprobar</h2>
+  <hr class="sec-rule">
+  <ul>
+    <li><strong>Cuál de las dos tarifas es la vigente.</strong> He asumido que <code>/precios/</code>, por ser la que enlaza el menú, pero tiene que confirmarlo el cliente. También si el curso Foundation de 65 € sigue existiendo.</li>
+    <li><strong>Qué pasó con el box de Fuenlabrada.</strong> La página existe vacía y hay texto en plural heredado de esa época. Hay que saber si cerró, si se traspasó o si vuelve.</li>
+    <li><strong>Destino del formulario de contacto.</strong> Envía a <code>processForm.php</code> del tema; no se ve a qué buzón entrega ni si alguien lo lee.</li>
+    <li><strong>Datos fiscales del titular:</strong> razón social, CIF y domicilio social. No aparecen en ninguna página y hacen falta para el aviso legal.</li>
+    <li><strong>Accesos.</strong> No he entrado al panel de WordPress, ni al alojamiento, ni a CrossHero, ni al perfil de Google Business. Todo lo de este parte sale del código público de la web.</li>
+    <li><strong>Las 1.016 entradas</strong> no las he leído una a una. Hace falta una criba con el cliente antes de migrar.</li>
+    <li><strong>Datos reales de tráfico.</strong> Como no hay analítica instalada, no existe histórico: no se puede saber qué páginas funcionan hoy ni de dónde viene la gente. Es un punto ciego que solo se cierra midiendo a partir de ahora.</li>
+    <li><strong>Capturas de pantalla.</strong> El panel del navegador no compositaba en esta sesión, así que todas las mediciones visuales de este parte salen de estilos calculados y de geometría del DOM, no de imágenes.</li>
+  </ul>
+</section>
+
+<footer class="end">
+  <p>Barrido del 28 de agosto de 2026 sobre <span class="mono">versuscrossfit.com</span> en vivo · 8 sitemaps y 1.816 URLs inventariadas · 23 páginas descargadas y analizadas una a una · 48 recursos de la portada pesados uno por uno · mediciones de contraste, geometría táctil y red tomadas sobre el DOM renderizado.</p>
+  <p>Todos los datos de este documento son verificables volviendo a cargar las URLs citadas.</p>
+</footer>
+
+</div>
+</div>
